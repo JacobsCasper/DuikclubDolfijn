@@ -54,7 +54,8 @@ class NieuwsController extends AbstractController {
             return $this->redirectToRoute('nieuws');
         }
 
-        return $this->render('forms/newNieuwsItem.html.twig', array(
+        return $this->render('forms/defaultForms.html.twig', array(
+            'header' => 'Create',
             'form' => $form->createView()
         ));
 
@@ -103,7 +104,8 @@ class NieuwsController extends AbstractController {
             return $this->redirectToRoute('nieuws');
         }
 
-        return $this->render('forms/newNieuwsItem.html.twig', array(
+        return $this->render('forms/defaultForms.html.twig', array(
+            'header' => 'Edit',
             'form' => $form->createView()
         ));
 

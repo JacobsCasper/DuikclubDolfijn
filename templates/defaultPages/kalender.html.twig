@@ -14,8 +14,10 @@
         <th scope="col">Omschrijving</th>
         <th scope="col">Datum</th>
         <th scope="col">Details</th>
-        <th scope="col">Delete</th>
         <th scope="col">Categorie</th>
+        {% if app.user %}
+            <th scope="col">Delete</th>
+        {% endif %}
     </tr>
     </thead>
     <tbody>
@@ -34,9 +36,8 @@
                 <tr>
                 <th scope="row">{{ item.title }}</th>
                 <td>{{ item.description }}</td>
-                <td>{{ item.startDate }}</td>
+                <td>{{ item.startDate }} - {{ item.endDate }}</td>
                 <td><a class="btn btn-info" href="/kalender/{{ item.id }}">details</a></td>
-                <td><a class="btn btn-danger" href="/kalender/remove/{{ item.id }}">delete</a></td>
                 {% if item.CalenderType==0 %}
                     <td><span class="badge badge-pill badge-primary">Duiken</span></td>
                 {% elseif item.CalenderType==1 %}
@@ -46,7 +47,9 @@
                 {% else %}
                     <tr>
                 {% endif %}
-
+                {% if app.user %}
+                    <td><a class="btn btn-danger" href="/kalender/remove/{{ item.id }}">delete</a></td>
+                {% endif %}
                 </tr>
             {% endfor %}
     </tbody>
