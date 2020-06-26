@@ -36,16 +36,6 @@ class CalenderController extends AbstractController {
     {
         $item = new CalenderItem();
 
-        try{
-            $x = $this->createFormBuilder($item)
-                ->add('submitDate', DateTimeType::class)
-                ->getForm();
-        } catch (\Exception $e){
-            return $this->render('defaultPages/home.html.twig', array('error' => $e->getMessage()));
-        }
-        return $this->render('defaultPages/home.html.twig');
-/*
-
         $form = $this->getCalenderItemForm($item, 'create');
 
         $form->handleRequest($request);
@@ -68,7 +58,7 @@ class CalenderController extends AbstractController {
 
         return $this->render('forms/newKalenderItem.html.twig', array(
             'form' => $form->createView()
-        ));*/
+        ));
     }
 
     /**
@@ -105,6 +95,8 @@ class CalenderController extends AbstractController {
             ->add('details', TextareaType::class, array(
                 'required' => true,
                 'attr' => array('class' => 'form-control', 'rows' => '10')))
+ //           ->add('startDate', DateTimeType::class)
+  //          ->add('endDate', DateTimeType::class)
             ->add('CalenderType', ChoiceType::class, [
                 'attr' => array('class' => 'form-control'),
                 'choices'  => [
