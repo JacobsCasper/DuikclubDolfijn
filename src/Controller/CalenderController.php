@@ -16,17 +16,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Knp\Component\Pager\PaginatorInterface;
 
 
 class CalenderController extends AbstractController {
     /**
      * @Route("/kalender", name="kalender")
      */
-    public function kalender()
+    public function kalender(Request $request, PaginatorInterface $paginator)
     {
         $calenderItems = $this->getDoctrine()->getRepository(CalenderItem::class)->findAll();
+        $query = array_reverse($calenderItems);
 
-        return $this->render('defaultPages/kalender.html.twig', array('calenderItems' => array_reverse($calenderItems)));
+        $results = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('defaultPages/kalender.html.twig', array('calenderItems' => $results));
     }
     /**
      * @Route("/kalender/add", name="addCalItem")
@@ -57,7 +65,7 @@ class CalenderController extends AbstractController {
 
 
         return $this->render('forms/defaultForms.html.twig', array(
-            'header' => 'Create',
+            'header' => 'Nieuw kalender item',
             'form' => $form->createView()
         ));
     }

@@ -55,7 +55,7 @@ class NieuwsController extends AbstractController {
         }
 
         return $this->render('forms/defaultForms.html.twig', array(
-            'header' => 'Create',
+            'header' => 'Nieuw Nieuws item',
             'form' => $form->createView()
         ));
 

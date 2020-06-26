@@ -55,7 +55,9 @@
     </tbody>
 </table>
     {% endif %}
-
+    <div style="display: flex; justify-content: center; align-items: center;">
+        {{ knp_pagination_render(calenderItems) }}
+    </div>
 {% endblock %}
 
 {% block javascripts %}

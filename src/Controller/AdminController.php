@@ -53,7 +53,7 @@ class AdminController extends AbstractController
         }
 
         return $this->render('forms/defaultForms.html.twig', array(
-            'header' => 'Register user',
+            'header' => 'Gebruiker aanmmaken',
             'form' => $form->createView()
         ));
     }
