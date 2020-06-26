@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if kalenderItem %}
+        <div class="jumbotron">
+            <h1 class="display-3">{{ kalenderItem.title }}</h1>
+            <p class="lead">{{ kalenderItem.description }}</p>
+            <hr class="my-4">
+            <p>{{ kalenderItem.details }}</p>
+            <p class="lead blockquote-footer">{{ kalenderItem.submitDate }} door {{ kalenderItem.author }}</p>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

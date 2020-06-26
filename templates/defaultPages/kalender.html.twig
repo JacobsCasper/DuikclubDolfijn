@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if app.user %}
+        <div class="text-center mb-3">
+            <a class="btn btn-primary" href="{{ path('addCalItem') }}">Kalender item toevoegen</a>
+        </div>
+    {% endif %}
+    {% if calenderItems %}
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col">Titel</th>
+        <th scope="col">Omschrijving</th>
+        <th scope="col">Datum</th>
+        <th scope="col">Details</th>
+        <th scope="col">Delete</th>
+        <th scope="col">Categorie</th>
+    </tr>
+    </thead>
+    <tbody>
+            {% for item in calenderItems %}
+<!--
+                {% if item.CalenderType==0 %}
+                    <tr class="table-primary">
+                {% elseif item.CalenderType==1 %}
+                    <tr class="table-success">
+                {% elseif item.CalenderType==2 %}
+                    <tr class="table-danger">
+                {% else %}
+                    <tr>
+                {% endif %}-->
+
+                <tr>
+                <th scope="row">{{ item.title }}</th>
+                <td>{{ item.description }}</td>
+                <td>{{ item.startDate }}</td>
+                <td><a class="btn btn-info" href="/kalender/{{ item.id }}">details</a></td>
+                <td><a class="btn btn-danger" href="/kalender/remove/{{ item.id }}">delete</a></td>
+                {% if item.CalenderType==0 %}
+                    <td><span class="badge badge-pill badge-primary">Duiken</span></td>
+                {% elseif item.CalenderType==1 %}
+                    <td><span class="badge badge-pill badge-success">Lessen/trainingen</span></td>
+                {% elseif item.CalenderType==2 %}
+                    <td><span class="badge badge-pill badge-danger">Activiteiten</span></td>
+                {% else %}
+                    <tr>
+                {% endif %}
+
+                </tr>
+            {% endfor %}
+    </tbody>
+</table>
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

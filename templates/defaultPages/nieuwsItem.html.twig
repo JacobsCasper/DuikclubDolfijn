@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if nieuwsItem %}
+        <div class="jumbotron">
+            <h1 class="display-3">{{ nieuwsItem.title }}</h1>
+            <p class="lead blockquote-footer">{{ nieuwsItem.submitDate }} door {{ nieuwsItem.author }}</p>
+            <hr class="my-4">
+            <p>{{ nieuwsItem.description }}</p>
+            {% if app.user %}
+                <a href="{{ path('editNieuwsItem', {'id': nieuwsItem.id}) }}" class="btn btn-warning text-light">Edit</a>
+                <a href="{{ path('deleteNieuwsItem', {'id': nieuwsItem.id}) }}" class="btn btn-danger text-light">Delete</a>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if app.user %}
+        <div class="text-center mb-3">
+            <a class="btn btn-primary" href="{{ path('addNieuws') }}">Nieuws artikel toevoegen</a>
+        </div>
+    {% endif %}
+    {% if nieuwsItems %}
+        <div class="row">
+        {% for item in nieuwsItems %}
+            <div class="col-sm-6 mb-2">
+                <div class="card">
+                    <div class="card-body h-200">
+                        <h4 class="card-title">{{ item.title }}</h4>
+                        <p class="lead mb-2 blockquote-footer">{{ item.submitDate }} door {{ item.author }}</p>
+                        <p class="card-text mb-0 w-100" style="max-height: 4rem;overflow: hidden;overflow-x: hidden;overflow-y: hidden;">{{ item.description }}</p>
+                        <a href="/nieuws/{{ item.id }}" class="card-link">Lees meer</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}
