@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if customPageInfo is defined %}
+        <div class="card border-secondary text-white mb-2">
+            <img class="card-img headerImage mainImage" src="{{ asset('uploads/') ~ customPageInfo.picturePath }}" alt="Card image">
+            <div class="card-img-overlay">
+                <h1 class="card-title centered headerTitle">{{ customPageInfo.title }}</h1>
+
+            </div>
+        </div>
+        <div class="jumbotron container">
+            <p class="card-text">{{ customPageInfo.body }}</p>
+            <p class="card-text">{{ customPageInfo.submitDate }} door {{ customPageInfo.author }}</p>
+        </div>
+
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

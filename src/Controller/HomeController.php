@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\CalenderItem;
 use App\Entity\NieuwsItem;
+use App\Entity\Page;
+use App\Services\publishedPageFilter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +19,10 @@ class HomeController extends AbstractController {
      */
     public function index()
     {
-        return $this->render('defaultPages/home.html.twig');
+        $pages = $this->getCustomPages();
+        $homePageEnabled = $this->getHomePageEnabledPages();
+
+        return $this->render('defaultPages/home.html.twig', array('pages' => $pages, 'homePageEnabledPages' => $homePageEnabled));
     }
 
     /**
@@ -25,8 +30,14 @@ class HomeController extends AbstractController {
      */
     public function leerDuiken()
     {
-        return $this->render('defaultPages/leerDuiken.html.twig');
+        $pages = $this->getCustomPages();
+        return $this->render('defaultPages/leerDuiken.html.twig', array('pages' => $pages));
     }
 
-
+    private function getCustomPages(){
+        return publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll());
+    }
+    private function getHomePageEnabledPages(){
+        return publishedPageFilter::filterHomePageEnabled($this->getDoctrine()->getRepository(Page::class)->findAll());
+    }
 }

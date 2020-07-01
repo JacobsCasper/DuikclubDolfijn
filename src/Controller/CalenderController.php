@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\CalenderItem;
+use App\Entity\Page;
 use App\Services\CalenderTypes;
+use App\Services\publishedPageFilter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -33,8 +35,8 @@ class CalenderController extends AbstractController {
             $request->query->getInt('page', 1),
             10
         );
-
-        return $this->render('defaultPages/kalender.html.twig', array('calenderItems' => $results));
+        $pages = $this->getCustomPages();
+        return $this->render('defaultPages/kalender.html.twig', array('calenderItems' => $results, 'pages' => $pages));
     }
     /**
      * @Route("/kalender/add", name="addCalItem")
@@ -63,15 +65,17 @@ class CalenderController extends AbstractController {
             return $this->redirectToRoute('kalender');
         }
 
-
+        $pages = $this->getCustomPages();
         return $this->render('forms/defaultForms.html.twig', array(
             'header' => 'Nieuw kalender item',
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'pages' => $pages
         ));
     }
 
     /**
      * @Route("/kalender/remove/{id}", name="removeCalItem")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function removeCalItem($id)
     {
@@ -90,8 +94,8 @@ class CalenderController extends AbstractController {
     public function calItem($id)
     {
         $kalenderItem = $this->getDoctrine()->getRepository(CalenderItem::class)->find($id);
-
-        return $this->render('defaultPages/kalenderItem.html.twig', array('kalenderItem' => $kalenderItem));
+        $pages = $this->getCustomPages();
+        return $this->render('defaultPages/kalenderItem.html.twig', array('kalenderItem' => $kalenderItem, 'pages' => $pages));
     }
 
     private function getCalenderItemForm($calenderItem, $buttonName){
@@ -104,7 +108,7 @@ class CalenderController extends AbstractController {
             ->add('details', TextareaType::class, array(
                 'required' => true,
                 'attr' => array('class' => 'form-control', 'rows' => '10')))
- //           ->add('startDate', DateTimeType::class)
+ //           ->add('startDate', DateTimeType::class) //TODO: this throws an error
   //          ->add('endDate', DateTimeType::class)
             ->add('CalenderType', ChoiceType::class, [
                 'attr' => array('class' => 'form-control'),
@@ -120,5 +124,9 @@ class CalenderController extends AbstractController {
             ))
             ->getForm();
 
+    }
+
+    private function getCustomPages(){
+        return publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll());
     }
 }

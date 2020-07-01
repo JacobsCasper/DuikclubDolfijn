@@ -1,10 +1,10 @@
-<nav class="navbar navbar-expand-sm navbar-dark bg-primary mb-3" >
+<nav class="navbar navbar-expand-sm navbar-dark bg-primary mb-0 fixed-top header" id="myHeader">
     <div class="container">
         <a href="/" class="navbar-brand mx-3">
-            <img src="{{ asset('images/logo_home.png') }}" class="navbar-logo mh-10" style="max-height: 6rem;" alt="oops">
+            <img src="{{ asset('images/logo.png') }}" class="navbar-logo mh-10 logo" style="max-height: 6rem;" alt="oops">
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-nav">
-            <span class="navbar-toggle-icon"></span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-nav" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="mobile-nav">
@@ -21,6 +21,13 @@
                 <li class="nav-item">
                     <a href="/" class="nav-link">Foto's</a>
                 </li>
+                {% if pages is defined %}
+                    {% for page in pages %}
+                        <li class="nav-item">
+                            <a href="/page/{{ page.id }}" class="nav-link">{{ page.navigationText }}</a>
+                        </li>
+                    {% endfor %}
+                {% endif %}
                 <li class="nav-item dropdown show">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Info</a>
                     <div class="dropdown-menu" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;" x-placement="bottom-start">
@@ -35,14 +42,19 @@
                 {% if app.user %}
                     <li class="nav-item dropdown show">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
-                        <div class="dropdown-menu" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;" x-placement="bottom-start">
-                            <a class="dropdown-item" href="{{ path('addUser') }}">Gebruiker aanmaken</a>
+                        <div class="dropdown-menu">
+
                             <a class="dropdown-item" href="{{ path('addCalItem') }}">Kalender item toevoegen</a>
                             <a class="dropdown-item" href="{{ path('addNieuws') }}">Nieuws item toegoegen</a>
-                            <a class="dropdown-item" href="#">Pagina toegoegen</a>
-
+                            <a class="dropdown-item" href="{{ path('getAllPages') }}">Paginas beheren</a>
                             <div class="dropdown-divider"></div>
+
+                            <a class="dropdown-item" href="{{ path('addUser') }}">Gebruiker aanmaken</a>
+                            <a class="dropdown-item" href="{{ path('removeUser') }}">Gebruiker verwijderen</a>
+                            <div class="dropdown-divider"></div>
+
                             <a class="dropdown-item" href="{{ path('logout') }}">Logout</a>
+
                         </div>
                     </li>
                 {% endif %}

@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Page;
+use App\Services\publishedPageFilter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,9 +19,12 @@ class SecurityController extends AbstractController
         $error = $utils->getLastAuthenticationError();
         $lastUsername = $utils->getLastUsername();
 
+        $pages = $this->getCustomPages();
+
         return $this->render('security/login.html.twig', [
             'error' => $error,
             'last_username' => $lastUsername,
+            'pages' => $pages
         ]);
     }
 
@@ -29,5 +34,9 @@ class SecurityController extends AbstractController
     public function logout()
     {
 
+    }
+
+    private function getCustomPages(){
+        return publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll());
     }
 }

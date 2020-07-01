@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\CalenderItem;
 use App\Entity\NieuwsItem;
+use App\Entity\Page;
 use App\Services\CalenderTypes;
+use App\Services\publishedPageFilter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,8 +27,9 @@ class NieuwsController extends AbstractController {
     public function nieuws()
     {
         $nieuwsItems = $this->getDoctrine()->getRepository(NieuwsItem::class)->findAll();
+        $pages = $this->getCustomPages();
 
-        return $this->render('defaultPages/nieuws.html.twig', array('nieuwsItems' => array_reverse($nieuwsItems)));
+        return $this->render('defaultPages/nieuws.html.twig', array('nieuwsItems' => array_reverse($nieuwsItems), 'pages' => $pages));
     }
 
     /**
@@ -53,10 +56,12 @@ class NieuwsController extends AbstractController {
 
             return $this->redirectToRoute('nieuws');
         }
+        $pages = $this->getCustomPages();
 
         return $this->render('forms/defaultForms.html.twig', array(
             'header' => 'Nieuw Nieuws item',
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'pages' => $pages
         ));
 
     }
@@ -67,8 +72,9 @@ class NieuwsController extends AbstractController {
     public function nieuwsItem($id)
     {
         $nieuwsItem = $this->getDoctrine()->getRepository(NieuwsItem::class)->find($id);
+        $pages = $this->getCustomPages();
 
-        return $this->render('defaultPages/nieuwsItem.html.twig', array('nieuwsItem' => $nieuwsItem));
+        return $this->render('defaultPages/nieuwsItem.html.twig', array('nieuwsItem' => $nieuwsItem, 'pages' => $pages));
     }
 
     /**
@@ -103,10 +109,12 @@ class NieuwsController extends AbstractController {
 
             return $this->redirectToRoute('nieuws');
         }
+        $pages = $this->getCustomPages();
 
         return $this->render('forms/defaultForms.html.twig', array(
             'header' => 'Edit',
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'pages' => $pages
         ));
 
     }
@@ -125,5 +133,9 @@ class NieuwsController extends AbstractController {
                 'attr' => array('class' => 'btn btn-primary mt-3')
             ))
             ->getForm();
+    }
+
+    private function getCustomPages(){
+        return publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll());
     }
 }
