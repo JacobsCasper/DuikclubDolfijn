@@ -71,7 +71,7 @@ class CalenderItem
     private $maxSubscriptions;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $subscriptionEndDate;
 
@@ -155,13 +155,13 @@ class CalenderItem
      */
     public function getEndDate()
     {
-        return $this->endDate->format('d/m/Y');
+        return $this->endDate;
     }
 
     /**
      * @param mixed $endDate
      */
-    public function setEndDate($endDate): void
+    public function setEndDate(\DateTime $endDate): void
     {
         $this->endDate = $endDate;
     }
@@ -177,7 +177,7 @@ class CalenderItem
     /**
      * @param mixed $submitDate
      */
-    public function setSubmitDate($submitDate): void
+    public function setSubmitDate(\DateTime  $submitDate): void
     {
         $this->submitDate = $submitDate;
     }
@@ -236,13 +236,13 @@ class CalenderItem
      */
     public function getStartDate()
     {
-        return $this->startDate->format('d/m/Y');
+        return $this->startDate;
     }
 
     /**
      * @param mixed $startDate
      */
-    public function setStartDate($startDate): void
+    public function setStartDate(\DateTime $startDate): void
     {
         $this->startDate = $startDate;
     }
@@ -258,9 +258,13 @@ class CalenderItem
     /**
      * @param mixed $subscriptionEndDate
      */
-    public function setSubscriptionEndDate($subscriptionEndDate): void
+    public function setSubscriptionEndDate(\DateTime $subscriptionEndDate): void
     {
-        $this->subscriptionEndDate = $subscriptionEndDate;
+        if($subscriptionEndDate == ''){
+            $this->subscriptionEndDate = null;
+        } else {
+            $this->subscriptionEndDate = $subscriptionEndDate;
+        }
     }
 
 

@@ -56,8 +56,6 @@ class CalenderController extends AbstractController {
             $user = $this->getUser();
             $item = $form->getData();
             $item->setAuthor($user->getUsername());
-            $item->setStartDate(new \DateTime());
-            $item->setEndDate(new \DateTime());
             $item->setSubmitDate(new \DateTime());
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -110,10 +108,14 @@ class CalenderController extends AbstractController {
             ->add('details', TextareaType::class, array(
                 'required' => true,
                 'attr' => array('class' => 'form-control', 'rows' => '10')))
- //           ->add('startDate', DateTimeType::class) //TODO: this throws an error
-  //          ->add('endDate', DateTimeType::class)
- //          ->add('subscriptionEndDate', DateTimeType::class, array(
- //                'required' => false))
+            ->add('startDate', DateTimeType::class, array(
+                'attr' => array('class' => 'form-control'),
+                'label' =>"Begin datum"
+            ))
+            ->add('endDate', DateTimeType::class)
+/*            ->add('subscriptionEndDate', DateTimeType::class, array( TODO: throws an exception
+                'required' => false,
+                'empty_data' => null))*/
             ->add('CalenderType', ChoiceType::class, [
                 'attr' => array('class' => 'form-control'),
                 'choices'  => [

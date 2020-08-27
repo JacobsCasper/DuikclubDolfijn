@@ -27,8 +27,9 @@ $ php bin/console doctrine:fixtures:load
 ## Usage
 
 >Open any browser.
->
 >Surf to localhost:8000
 >
 >The site should open.
+>
+>You should be able to login as administrator using the following credentials. (Username: admin, password: admin)
 

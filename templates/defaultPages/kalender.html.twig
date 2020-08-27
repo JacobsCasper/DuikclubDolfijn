@@ -24,7 +24,12 @@
                                 {% endif %}
                         </div>
                         <div class="card-body">
-                            <h4 class="card-title">{{ item.startDate }} - {{ item.endDate }}</h4>
+                            {% if item.startDate|date("m/d/Y") == item.endDate|date("m/d/Y") %}
+                                <h4 class="card-title">{{ item.startDate|date("F jS \\a\\t g:ia") }}</h4>
+                                <h3 class="card-title">{{ item.startDate|date("g:i") }} - {{ item.endDate|date("g:i") }}</h3>
+                            {% else %}
+                                <h4 class="card-title">{{ item.startDate|date("m/d/Y") }} - {{ item.endDate|date("m/d/Y") }}</h4>
+                            {% endif %}
                             <p class="card-text">{{ item.description }}</p>
                             <a class="btn btn-link" href="/kalender/{{ item.id }}">details</a>
                         </div>
