@@ -25,6 +25,7 @@ class UserFixture extends Fixture
             $this->encoder->encodePassword($user, 'admin')
         );
         $user->setEmail('admin');
+        $user->makeAdmin();
 
         $manager->persist($user);
         $manager->flush();

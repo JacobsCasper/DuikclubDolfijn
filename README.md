@@ -17,6 +17,13 @@ $ docker exec -it duikclubdolfijn_php_1 bash
 $ php bin/console doctrine:migrations:migrate
 ```
 
+To unlock all functionality of this site you will need an administrator user.
+
+To get this you need to execute the following line inside the docker php bash you accessed in the previous script.
+```shell
+$ php bin/console doctrine:fixtures:load
+```
+
 ## Usage
 
 > Open any browser.
