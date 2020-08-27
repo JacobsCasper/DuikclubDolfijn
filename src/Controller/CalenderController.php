@@ -33,11 +33,12 @@ class CalenderController extends AbstractController {
         $results = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            10
+            9
         );
         $pages = $this->getCustomPages();
         return $this->render('defaultPages/kalender.html.twig', array('calenderItems' => $results, 'pages' => $pages));
     }
+
     /**
      * @Route("/kalender/add", name="addCalItem")
      * @IsGranted("ROLE_ADMIN")

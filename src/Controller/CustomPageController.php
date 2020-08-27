@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\NieuwsItem;
 use App\Entity\Page;
 use App\Entity\User;
+use App\Services\FileService;
 use App\Services\publishedPageFilter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -46,6 +47,7 @@ class CustomPageController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
     public function addPage(Request $request, SluggerInterface $slugger){
+        $fileService = new FileService();
         $page = new Page();
 
         $form = $this->getPageForm($page, 'create');
@@ -58,21 +60,11 @@ class CustomPageController extends AbstractController
             //configure and upload image
             $picture = $form->get('picture')->getData();
 
-            if ($picture) { //TODO: in een apparte classe zetten om deze functionaliteit elders ook te kunnen gebruiken
-                $originalFilename = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $picture->guessExtension();
-
-                try {
-                    $picture->move(
-                        $this->getParameter('uploads_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-
-                }
-
+            if ($picture) {
+                $newFilename = $fileService->uploadFile($picture, $slugger, $this->getParameter('uploads_directory'));
                 $page->setPicturePath($newFilename);
+            } else{
+                $page->setPicturePath("");
             }
 
             $user = $this->getUser();
@@ -115,6 +107,7 @@ class CustomPageController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
     public function editPage(Request $request, SluggerInterface $slugger, $id){
+        $fileService = new FileService();
         $page = $this->getDoctrine()->getRepository(Page::class)->find($id);
         $form = $this->getPageForm($page, 'edit');
         $form->handleRequest($request);
@@ -124,19 +117,14 @@ class CustomPageController extends AbstractController
             $picture = $form->get('picture')->getData();
 
             if ($picture) {
-                $originalFilename = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$picture->guessExtension();
-
                 try {
                     if($page->getPicturePath() != null || $page->getPicturePath() != ""){
                         $path = $this->getParameter('uploads_directory') . '/' . $page->getPicturePath();
                         unlink($path);
                     }
-                    $picture->move(
-                        $this->getParameter('uploads_directory'),
-                        $newFilename
-                    );
+
+                    $newFilename = $fileService->uploadFile($picture, $slugger, $this->getParameter('uploads_directory'));
+
                 } catch (FileException $e) {
 
                 }

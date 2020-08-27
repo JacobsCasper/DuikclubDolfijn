@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="text-center mb-3">
+            <a class="btn btn-primary" href="{{ path('addUser') }}">User toevoegen</a>
+        </div>
+    {% endif %}
+    {% if users %}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Naam</th>
+                <th scope="col">Email</th>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <th scope="col">Delete</th>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <th scope="col">Edit</th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <td><a class="btn btn-danger" href="{{ path('removeUser', {'id': user.id }) }}">delete</a></td>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <td><a class="btn btn-warning" href="#">edit</a></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    <div style="display: flex; justify-content: center; align-items: center;">
+        {{ knp_pagination_render(users) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

@@ -1,8 +1,12 @@
-<nav class="navbar navbar-expand-sm navbar-dark bg-primary mb-0 fixed-top header" id="myHeader">
+<nav class="navbar navbar-expand-sm navbar-light bg-light mb-0 fixed-top header" id="myHeader">
     <div class="container">
         <a href="/" class="navbar-brand mx-3">
-            <img src="{{ asset('images/logo.png') }}" class="navbar-logo mh-10 logo" style="max-height: 6rem;" alt="oops">
+            Duikclub Dolfijn
         </a>
+        <!--
+
+            <img src="{{ asset('images/logo.png') }}" class="navbar-logo mh-10 logo" style="max-height: 6rem;" alt="oops">
+        -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-nav" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -50,7 +54,7 @@
                             <div class="dropdown-divider"></div>
 
                             <a class="dropdown-item" href="{{ path('addUser') }}">Gebruiker aanmaken</a>
-                            <a class="dropdown-item" href="{{ path('removeUser') }}">Gebruiker verwijderen</a>
+                            <a class="dropdown-item" href="{{ path('getUsers') }}">Gebruikers</a>
                             <div class="dropdown-divider"></div>
 
                             <a class="dropdown-item" href="{{ path('logout') }}">Logout</a>

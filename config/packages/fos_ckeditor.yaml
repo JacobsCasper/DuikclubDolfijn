@@ -1,0 +1,13 @@
+# Read the documentation: https://symfony.com/doc/current/bundles/FOSCKEditorBundle/index.html
+
+fos_ck_editor:
+    configs:
+        my_config_1:
+            toolbar: "custom_toolbar"
+    toolbars:
+        configs:
+            custom_toolbar: [ "@document", "/", "@link" , "/", "@tool" ]
+
+twig:
+    form_themes:
+        - '@FOSCKEditor/Form/ckeditor_widget.html.twig'

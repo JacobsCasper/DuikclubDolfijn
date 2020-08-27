@@ -8,6 +8,11 @@
             <hr class="my-4">
             <p>{{ kalenderItem.details }}</p>
             <p class="lead blockquote-footer">{{ kalenderItem.submitDate }} door {{ kalenderItem.author }}</p>
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <a class="btn btn-danger" href="/kalender/remove/{{ kalenderItem.id }}">delete</a>
+                <a class="btn btn-warning" href="/kalender/edit/{{ kalenderItem.id }}">edit</a>
+            {% endif %}
         </div>
     {% endif %}
 {% endblock %}

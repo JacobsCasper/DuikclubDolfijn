@@ -25,6 +25,11 @@ class NieuwsItem
     /**
      * @ORM\Column(type="text")
      */
+    private $picturePath;
+
+    /**
+     * @ORM\Column(type="text")
+     */
     private $description;
 
     /**
@@ -73,6 +78,22 @@ class NieuwsItem
     public function setDescription($description): void
     {
         $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPicturePath()
+    {
+        return $this->picturePath;
+    }
+
+    /**
+     * @param mixed $picturePath
+     */
+    public function setPicturePath($picturePath): void
+    {
+        $this->picturePath = $picturePath;
     }
 
     /**

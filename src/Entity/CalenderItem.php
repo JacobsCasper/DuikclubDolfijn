@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\CalenderItemRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OneToMany;
+use mysql_xdevapi\Exception;
 
 /**
  * @ORM\Entity(repositoryClass=CalenderItemRepository::class)
@@ -56,6 +59,58 @@ class CalenderItem
      * @ORM\Column(type="text")
      */
     private $details;
+
+    /**
+     * @OneToMany(targetEntity="UserSubscription", mappedBy="CalenderItem")
+     */
+    private $UserSubscriptions;
+
+    /**
+     * @ORM\Column (type="integer")
+     */
+    private $maxSubscriptions;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $subscriptionEndDate;
+
+    public function __construct() {
+        $this->UserSubscriptions = new ArrayCollection();
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getUserSubscriptions(): ArrayCollection
+    {
+        return $this->UserSubscriptions;
+    }
+
+    /**
+     * @param ArrayCollection $UserSubscriptions
+     */
+    public function setUserSubscriptions(ArrayCollection $UserSubscriptions): void
+    {
+        $this->UserSubscriptions = $UserSubscriptions;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaxSubscriptions()
+    {
+        return $this->maxSubscriptions;
+    }
+
+    /**
+     * @param mixed $maxSubscriptions
+     */
+    public function setMaxSubscriptions($maxSubscriptions): void
+    {
+        $this->maxSubscriptions = $maxSubscriptions;
+    }
+
 
 
     public function getId(): ?int
@@ -192,5 +247,48 @@ class CalenderItem
         $this->startDate = $startDate;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSubscriptionEndDate()
+    {
+        return $this->subscriptionEndDate;
+    }
+
+    /**
+     * @param mixed $subscriptionEndDate
+     */
+    public function setSubscriptionEndDate($subscriptionEndDate): void
+    {
+        $this->subscriptionEndDate = $subscriptionEndDate;
+    }
+
+
+
+    public function maxSubscriptionsReached(){
+        if(count($this->UserSubscriptions) >= $this->maxSubscriptions){
+            return true;
+        }
+        return false;
+    }
+
+    public function subscriptionDateExpired(){
+        $today = strtotime("today midnight");
+
+        if($today >= $this->subscriptionEndDate){
+            return true; //expired
+        } else {
+            return false;
+        }
+    }
+
+    public function addSubscriber(UserSubscription $subscription){
+        if($this->maxSubscriptionsReached() || $this->subscriptionDateExpired()){
+            return false;
+        } else {
+            $this->UserSubscriptions = $subscription;
+            return true;
+        }
+    }
 
 }

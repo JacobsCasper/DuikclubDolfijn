@@ -9,13 +9,53 @@
     {% if nieuwsItems %}
         <div class="row">
         {% for item in nieuwsItems %}
-            <div class="col-sm-6 mb-2">
-                <div class="card">
-                    <div class="card-body bg-light h-200">
-                        <h4 class="card-title">{{ item.title }}</h4>
-                        <p class="lead mb-2 blockquote-footer">{{ item.submitDate }} door {{ item.author }}</p>
-                        <p class="card-text mb-0 w-100" style="max-height: 4rem;overflow: hidden;overflow-x: hidden;overflow-y: hidden;">{{ item.description }}</p>
-                        <a href="/nieuws/{{ item.id }}" class="card-link">Lees meer</a>
+            <div class="col-sm-100 mb-2 w-100">
+                <div class="jumbotron" style="background: unset">
+                    <div class="row">
+                        {% if item.picturePath != "" %}
+                            {% if loop.index%2 == 0 %}
+                                <div class="col">
+                                    <h1 class="display-5">{{ item.title }}</h1>
+                                    <h6 class="card-subtitle mb-2 text-muted blockquote-footer">{{ item.submitDate }} door {{ item.author }}</h6>
+                                    <hr class="my-4">
+                                    <div class="card-text mb-0 w-100 h-100" style="max-height: 4rem;overflow: hidden;overflow-x: hidden;overflow-y: hidden;">{{ item.description | raw }}</div>
+                                    <p class="lead">
+                                        <a href="/nieuws/{{ item.id }}" class="card-link">Lees meer</a>
+                                    </p>
+                                </div>
+                                <div class="col">
+                                    <div class="card">
+                                        <img class="card-image" style=" width: 100%; display: block;" src="{{ asset('uploads/') ~ item.picturePath }}" alt="Card image">
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="col">
+                                    <div class="card">
+                                        <img class="card-image" style=" width: 100%; display: block;" src="{{ asset('uploads/') ~ item.picturePath }}" alt="Card image">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <h1 class="display-5">{{ item.title }}</h1>
+                                    <h6 class="card-subtitle mb-2 text-muted blockquote-footer">{{ item.submitDate }} door {{ item.author }}</h6>
+                                    <hr class="my-4">
+                                    <div class="card-text mb-0 w-100 h-100" style="max-height: 4rem;overflow: hidden;overflow-x: hidden;overflow-y: hidden;">{{ item.description | raw}}</div>
+                                    <p class="lead">
+                                        <a href="/nieuws/{{ item.id }}" class="card-link">Lees meer</a>
+                                    </p>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="w-100">
+                                <h1 class="display-5">{{ item.title }}</h1>
+                                <h6 class="card-subtitle mb-2 text-muted blockquote-footer">{{ item.submitDate }} door {{ item.author }}</h6>
+                                <hr class="my-4">
+                                <div class="card-text mb-0 w-100 h-100" style="max-height: 4rem;overflow: hidden;overflow-x: hidden;overflow-y: hidden;">{{ item.description | raw }}</div>
+                                <p class="lead">
+                                    <a href="/nieuws/{{ item.id }}" class="card-link">Lees meer</a>
+                                </p>
+                            </div>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>

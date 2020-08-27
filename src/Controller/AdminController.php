@@ -8,7 +8,9 @@ namespace App\Controller;
 use App\Entity\Page;
 use App\Entity\User;
 use App\Services\publishedPageFilter;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,6 +32,22 @@ class AdminController extends AbstractController
     }
 
     /**
+     * @Route("/users", name="getUsers")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function getUsers(Request $request, PaginatorInterface $paginator){
+        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+
+        $results = $paginator->paginate(
+            $users,
+            $request->query->getInt('page', 1),
+            20
+        );
+        $pages = $this->getCustomPages();
+        return $this->render('AdminSpecificPages/users.html.twig', array('users' => $results, 'pages' => $pages));
+    }
+
+    /**
      * @Route("/user/add", name="addUser")
      * @IsGranted("ROLE_ADMIN")
      */
@@ -40,11 +58,16 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+            $admin = $form->get('Administrator')->getData();
+
             $user = $form->getData();
             $password = $user->getPassword();
             $user->setPassword(
                 $this->encoder->encodePassword($user, $password)
             );
+            if($admin){
+                $user->makeAdmin();
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
@@ -61,36 +84,18 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/user/remove", name="removeUser")
+     * @Route("/user/remove/{id}", name="removeUser")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function removeUser(Request $request)
+    public function removeUser(Request $request, $id)
     {
-        $user = new User();
-        $form = $this->getUserForm($user, 'remove', 'danger');
-        $form->handleRequest($request);
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
 
-        if($form->isSubmitted() && $form->isValid()){
-            $user = $form->getData();
-            $password = $user->getPassword();
-            $user->setPassword(
-                $this->encoder->encodePassword($user, $password)
-            );
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($user);
+        $entityManager->flush();
 
-            $existingUser = $this->getDoctrine()->getRepository(User::class)->findOneBy(array('username' => $user->getUsername()));
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($existingUser);
-            $entityManager->flush();
-
-            return $this->render("defaultPages/home.html.twig");
-        }
-        $pages = $this->getCustomPages();
-
-        return $this->render('forms/defaultForms.html.twig', array(
-            'header' => 'Gebruiker verwijderen',
-            'form' => $form->createView(),
-            'pages' => $pages
-        ));
+        return $this->redirectToRoute("getUsers");
     }
 
 
@@ -108,6 +113,11 @@ class AdminController extends AbstractController
             ])
             ->add('email', EmailType::class,
                 array('attr' => array('class' => 'form-control'), 'label' => 'email'))
+            ->add('Administrator', CheckboxType::class, array(
+                'mapped' => false,
+                'label' => 'Maak van deze user een admin',
+                'required' => false,
+                'attr' => array('class' => 'form-control')))
             ->add('save', SubmitType::class, array(
                 'label' => $buttonName,
                 'attr' => array('class' => 'btn btn-' . $buttonType . ' mt-3')
