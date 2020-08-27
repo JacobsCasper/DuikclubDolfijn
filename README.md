@@ -26,9 +26,9 @@ $ php bin/console doctrine:fixtures:load
 
 ## Usage
 
-> Open any browser.
+>Open any browser.
 >
-> Surf to localhost:8000
+>Surf to localhost:8000
 >
 >The site should open.
 

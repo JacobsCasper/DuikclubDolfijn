@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -111,6 +112,8 @@ class CalenderController extends AbstractController {
                 'attr' => array('class' => 'form-control', 'rows' => '10')))
  //           ->add('startDate', DateTimeType::class) //TODO: this throws an error
   //          ->add('endDate', DateTimeType::class)
+ //          ->add('subscriptionEndDate', DateTimeType::class, array(
+ //                'required' => false))
             ->add('CalenderType', ChoiceType::class, [
                 'attr' => array('class' => 'form-control'),
                 'choices'  => [
@@ -119,6 +122,8 @@ class CalenderController extends AbstractController {
                     'Activiteiten' => 2,
                 ],
             ])
+            ->add('maxSubscriptions', IntegerType::class,
+                array('attr' => array('class' => 'form-control'), 'label' => 'Maximum aantal inschrijvingen'))
             ->add('save', SubmitType::class, array(
                 'label' => $buttonName,
                 'attr' => array('class' => 'btn btn-primary mt-3')

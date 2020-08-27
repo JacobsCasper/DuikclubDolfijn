@@ -275,10 +275,17 @@ class CalenderItem
     public function subscriptionDateExpired(){
         $today = strtotime("today midnight");
 
-        if($today >= $this->subscriptionEndDate){
+        if($today >= $this->endDate){
             return true; //expired
         } else {
-            return false;
+            if($this->subscriptionEndDate == null){
+                return false;
+            }
+            if($today >= $this->subscriptionEndDate){
+                return true; //expired
+            } else {
+                return false;
+            }
         }
     }
 
