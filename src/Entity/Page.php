@@ -66,7 +66,7 @@ class Page
 
 /*
  * deze 2 staan in de database opgeslagen
-    private $formTitle;
+    private $formId;
     private $fileLocation;
 */
 

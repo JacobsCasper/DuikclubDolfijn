@@ -8,6 +8,7 @@ use App\Entity\Page;
 use App\Entity\User;
 use App\Services\FileService;
 use App\Services\publishedPageFilter;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -168,7 +169,13 @@ class CustomPageController extends AbstractController
                 array('attr' => array('class' => 'form-control'),
                     'label' => 'Navigatiebalk text',
                     'required' => false))
-            ->add('body', TextareaType::class, array(
+            ->add('body', CKEditorType::class, array(
+                'config' =>[
+                    'uiColor' => '#e2e2e2',
+                    'toolbar' => 'basic',
+                    'required' => true
+                ],
+                'required' => true,
                 'label' => 'Inhoud',
                 'attr' => array('class' => 'form-control', 'rows' => '10')))
             ->add('published', CheckboxType::class, array(

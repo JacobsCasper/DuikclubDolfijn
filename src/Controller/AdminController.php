@@ -41,7 +41,7 @@ class AdminController extends AbstractController
         $results = $paginator->paginate(
             $users,
             $request->query->getInt('page', 1),
-            20
+            2 //TODO: als er maar 1 entity is of als de limit op 1 word gezet dan geeft de site een bad request
         );
         $pages = $this->getCustomPages();
         return $this->render('AdminSpecificPages/users.html.twig', array('users' => $results, 'pages' => $pages));
