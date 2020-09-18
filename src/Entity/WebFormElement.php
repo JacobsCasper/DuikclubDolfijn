@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=WebFormElementRepository::class)
  */
-class WebFormElement
+abstract class WebFormElement
 {
     /**
      * @ORM\Id()
@@ -18,10 +18,10 @@ class WebFormElement
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\WebForm", inversedBy="WebFormElement")
+     * @ORM\ManyToOne(targetEntity="App\Entity\WebForm", inversedBy="WebFormElement", cascade={"persist"})
      * @ORM\JoinColumn(name="Parent_id", referencedColumnName="id")
      */
-    private $Parent_id;
+    private $parent_id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -31,7 +31,12 @@ class WebFormElement
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $linked_entity;
+    private $frontLabel;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $endLabel;
 
     /**
      * @ORM\Column(type="boolean")
@@ -48,15 +53,15 @@ class WebFormElement
      */
     public function getParentId()
     {
-        return $this->Parent_id;
+        return $this->parent_id;
     }
 
     /**
-     * @param mixed $Parent_id
+     * @param mixed $parent_id
      */
-    public function setParentId($Parent_id): void
+    public function setParentId($parent_id): void
     {
-        $this->Parent_id = $Parent_id;
+        $this->parent_id = $parent_id;
     }
 
     /**
@@ -78,22 +83,6 @@ class WebFormElement
     /**
      * @return mixed
      */
-    public function getLinkedEntity()
-    {
-        return $this->linked_entity;
-    }
-
-    /**
-     * @param mixed $linked_entity
-     */
-    public function setLinkedEntity($linked_entity): void
-    {
-        $this->linked_entity = $linked_entity;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getRequired()
     {
         return $this->required;
@@ -107,5 +96,40 @@ class WebFormElement
         $this->required = $required;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getFrontLabel()
+    {
+        return $this->frontLabel;
+    }
+
+    /**
+     * @param mixed $frontLabel
+     */
+    public function setFrontLabel($frontLabel): void
+    {
+        $this->frontLabel = $frontLabel;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEndLabel()
+    {
+        return $this->endLabel;
+    }
+
+    /**
+     * @param mixed $endLabel
+     */
+    public function setEndLabel($endLabel): void
+    {
+        $this->endLabel = $endLabel;
+    }
+
+
+
+    public abstract function getType();
 
 }

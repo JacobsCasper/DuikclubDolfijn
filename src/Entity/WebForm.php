@@ -30,14 +30,9 @@ class WebForm
     private $form_elements;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="boolean")
      */
-    private $buttonName;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $buttonType;
+    private $open;
 
     public function getId(): ?int
     {
@@ -56,53 +51,44 @@ class WebForm
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getButtonName()
-    {
-        return $this->buttonName;
-    }
-
-    /**
-     * @param mixed $buttonName
-     */
-    public function setButtonName($buttonName): void
-    {
-        $this->buttonName = $buttonName;
+    public function __construct(){
+        $this->form_elements = new ArrayCollection();
     }
 
     /**
      * @return mixed
      */
-    public function getButtonType()
-    {
-        return $this->buttonType;
-    }
-
-    /**
-     * @param mixed $buttonType
-     */
-    public function setButtonType($buttonType): void
-    {
-        $this->buttonType = $buttonType;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getFormElements(): ArrayCollection
+    public function getFormElements()
     {
         return $this->form_elements;
     }
 
     /**
-     * @param ArrayCollection $form_elements
+     * @param mixed $form_elements
      */
-    public function setFormElements(ArrayCollection $form_elements): void
+    public function setFormElements($form_elements): void
     {
         $this->form_elements = $form_elements;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getOpen()
+    {
+        return $this->open;
+    }
+
+    /**
+     * @param mixed $open
+     */
+    public function setOpen($open): void
+    {
+        $this->open = $open;
+    }
+
+    public function addFormElement($element){
+        $this->getFormElements()->add($element);
+    }
 
 }
