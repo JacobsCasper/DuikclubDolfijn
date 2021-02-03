@@ -3,14 +3,22 @@
 
 namespace App\Controller;
 
+use App\Entity\Answer;
 use App\Entity\NieuwsItem;
 use App\Entity\Page;
 use App\Entity\User;
+use App\Entity\WebForm;
+use App\Entity\WebFormEmailType;
+use App\Entity\WebFormIntType;
+use App\Entity\WebFormRadioType;
+use App\Entity\WebFormStringType;
 use App\Services\FileService;
+use App\Services\FormTemplateGenerator;
 use App\Services\publishedPageFilter;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -25,6 +33,13 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class CustomPageController extends AbstractController
 {
+
+    private $formTemplateGenerator;
+
+    public function __construct(FormTemplateGenerator $formTemplateGenerator){
+        $this->formTemplateGenerator = $formTemplateGenerator;
+    }
+
     /**
      * @Route("/page/all", name="getAllPages")
      * @IsGranted("ROLE_ADMIN")
@@ -150,10 +165,47 @@ class CustomPageController extends AbstractController
     /**
      * @Route("/page/{id}", name="getPage")
      */
-    public function getPage($id){
+    public function getPage($id, Request $request){
         $pages = $this->getCustomPages();
         $page = $this->getDoctrine()->getRepository(Page::class)->find($id);
+        $webForm = null;
+        if($page->getFormId() != -1 || $page->getFormId() != null){
+            $webForm = $this->getDoctrine()->getRepository(WebForm::class)->find($page->getFormId());
+        }
         if($page != null && $page->getPublished()){
+            if($webForm->getOpen()){
+                $formElements = $this->getElements($webForm);
+                $formTemplate = $this->formTemplateGenerator->getForm($formElements, $this->createFormBuilder(), "Submit")->getForm();
+                $formTemplate->handleRequest($request);
+
+                if($formTemplate->isSubmitted() && $formTemplate->isValid()){
+                    $data = $formTemplate->getData();
+
+                    $answer = new Answer();
+                    $answer->setAnswers($data);
+                    $answer->setParentId($webForm);
+
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($answer);
+                    $entityManager->flush();
+
+                    return $this->render("defaultPages/customPageTemplate.html.twig"
+                        , array(
+                            'pages' => $pages,
+                            'customPageInfo' => $page,
+                            'form' => $formTemplate->createView(),
+                            'formTitle' => $webForm->getTitle()
+                        ));
+                }
+
+                return $this->render("defaultPages/customPageTemplate.html.twig"
+                    , array(
+                        'pages' => $pages,
+                        'customPageInfo' => $page,
+                        'form' => $formTemplate->createView(),
+                        'formTitle' => $webForm->getTitle()
+                    ));
+            }
             return $this->render("defaultPages/customPageTemplate.html.twig", array('pages' => $pages, 'customPageInfo' => $page));
         }
         return $this->render("defaultPages/home.html.twig", array('pages' => $pages));
@@ -161,6 +213,8 @@ class CustomPageController extends AbstractController
     }
 
     private function getPageForm($page, $buttonName, $buttonType='primary'){
+        $webForms = $this->getDoctrine()->getRepository(WebForm::class)->findAll();
+        $choices = $this->mapChoices($webForms);
         return $this->createFormBuilder($page)
             ->add('title', TextType::class,
                 array('attr' => array('class' => 'form-control'),
@@ -195,6 +249,11 @@ class CustomPageController extends AbstractController
                 'label' => "Upload foto",
                 'attr' => array('class' => 'form-control'),
                 'required' => false))
+            ->add('formId', ChoiceType::class, [
+                'attr' => array('class' => 'form-control'),
+                'choices'  => $choices,
+                'label' => "Link webform"
+            ])
             ->add('save', SubmitType::class, array(
                 'label' => $buttonName,
                 'attr' => array('class' => 'btn btn-' . $buttonType . ' mt-3')
@@ -206,4 +265,35 @@ class CustomPageController extends AbstractController
         return publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll());
     }
 
+    private function mapChoices($webForms){
+        $arr1 = [];
+        $arr2 = [];
+
+        array_push($arr1, -1);
+        array_push($arr2, null);
+        foreach ($webForms as $form){
+            array_push($arr1, $form->getId());
+            array_push($arr2, $form->getTitle());
+        }
+
+
+        return array_combine($arr2, $arr1);
+    }
+
+    private function getElements($webForm){
+        $criteria = array('parent_id' => $webForm->getId());
+        $elements = [];
+        $elements = $this->addWebFormElementsToArray($elements, $this->getDoctrine()->getRepository(WebFormStringType::class)->findBy($criteria));
+        $elements = $this->addWebFormElementsToArray($elements, $this->getDoctrine()->getRepository(WebFormRadioType::class)->findBy($criteria));
+        $elements = $this->addWebFormElementsToArray($elements, $this->getDoctrine()->getRepository(WebFormEmailType::class)->findBy($criteria));
+        $elements = $this->addWebFormElementsToArray($elements, $this->getDoctrine()->getRepository(WebFormIntType::class)->findBy($criteria));
+        return $elements;
+    }
+
+    private function addWebFormElementsToArray($elements, $arrayToAdd){
+        foreach ($arrayToAdd as $item){
+            array_push($elements, $item);
+        }
+        return $elements;
+    }
 }

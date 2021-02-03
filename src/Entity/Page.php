@@ -64,6 +64,11 @@ class Page
      */
     private $picturePath;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $formId;
+
 /*
  * deze 2 staan in de database opgeslagen
     private $formId;
@@ -73,6 +78,22 @@ class Page
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormId()
+    {
+        return $this->formId;
+    }
+
+    /**
+     * @param mixed $formId
+     */
+    public function setFormId($formId): void
+    {
+        $this->formId = $formId;
     }
 
     /**

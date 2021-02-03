@@ -16,6 +16,20 @@
             <p class="card-text">{{ customPageInfo.body | raw }}</p>
             <p class="card-text">{{ customPageInfo.submitDate }} door {{ customPageInfo.author }}</p>
         </div>
+        {% if form is defined %}
+            <hr>
+            <div>
+                {% if formTitle is defined%}
+                    <h3 class="card-title text-center">{{ formTitle }}</h3>
+                {% endif %}
+                {{ form_start(form) }}
+                <div>
+                    <hr>
+                    {{ form_widget(form) }}
+                </div>
+                {{ form_end(form) }}
+            </div>
+        {% endif %}
 
     {% endif %}
 {% endblock %}

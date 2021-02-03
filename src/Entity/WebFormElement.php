@@ -6,7 +6,7 @@ use App\Repository\WebFormElementRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=WebFormElementRepository::class)
+ * @ORM\MappedSuperclass()
  */
 abstract class WebFormElement
 {
@@ -17,11 +17,6 @@ abstract class WebFormElement
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\WebForm", inversedBy="WebFormElement", cascade={"persist"})
-     * @ORM\JoinColumn(name="Parent_id", referencedColumnName="id")
-     */
-    private $parent_id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -29,40 +24,38 @@ abstract class WebFormElement
     private $label;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer", length=255)
      */
-    private $frontLabel;
+    private $position;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer", length=255, nullable=true)
      */
-    private $endLabel;
+    private $price;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $comment;
 
     /**
      * @ORM\Column(type="boolean")
      */
     private $required;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\WebForm", inversedBy="WebFormElement")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     */
+    private $parent_id;
+
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getParentId()
-    {
-        return $this->parent_id;
-    }
 
-    /**
-     * @param mixed $parent_id
-     */
-    public function setParentId($parent_id): void
-    {
-        $this->parent_id = $parent_id;
-    }
 
     /**
      * @return mixed
@@ -99,37 +92,67 @@ abstract class WebFormElement
     /**
      * @return mixed
      */
-    public function getFrontLabel()
+    public function getPrice()
     {
-        return $this->frontLabel;
+        return $this->price;
     }
 
     /**
-     * @param mixed $frontLabel
+     * @param mixed $price
      */
-    public function setFrontLabel($frontLabel): void
+    public function setPrice($price): void
     {
-        $this->frontLabel = $frontLabel;
+        $this->price = $price;
     }
 
     /**
      * @return mixed
      */
-    public function getEndLabel()
+    public function getComment()
     {
-        return $this->endLabel;
+        return $this->comment;
     }
 
     /**
-     * @param mixed $endLabel
+     * @param mixed $comment
      */
-    public function setEndLabel($endLabel): void
+    public function setComment($comment): void
     {
-        $this->endLabel = $endLabel;
+        $this->comment = $comment;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parent_id;
+    }
 
+    /**
+     * @param mixed $parent_id
+     */
+    public function setParentId($parent_id): void
+    {
+        $this->parent_id = $parent_id;
+    }
 
     public abstract function getType();
+
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position): void
+    {
+        $this->position = $position;
+    }
 
 }

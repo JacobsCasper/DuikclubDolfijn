@@ -20,14 +20,19 @@ class WebForm
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $title;
 
     /**
-     * @OneToMany(targetEntity="App\Entity\WebFormElement", mappedBy="WebForm")
+     * @OneToMany(targetEntity="WebFormElement", mappedBy="WebForm")
      */
     private $form_elements;
+
+    /**
+     * @OneToMany(targetEntity="Answer", mappedBy="WebForm")
+     */
+    private $answers;
 
     /**
      * @ORM\Column(type="boolean")
@@ -86,6 +91,24 @@ class WebForm
     {
         $this->open = $open;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAnswers()
+    {
+        return $this->answers;
+    }
+
+    /**
+     * @param mixed $answers
+     */
+    public function setAnswers($answers): void
+    {
+        $this->answers = $answers;
+    }
+
+
 
     public function addFormElement($element){
         $this->getFormElements()->add($element);

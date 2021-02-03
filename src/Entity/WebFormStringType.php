@@ -10,22 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class WebFormStringType extends WebFormElement
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
 
     /**
      * @ORM\Column(type="smallint")
      */
     private $multiline;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getMultiline(): ?int
     {
@@ -43,4 +33,7 @@ class WebFormStringType extends WebFormElement
     {
         return "string";
     }
+
+
+
 }

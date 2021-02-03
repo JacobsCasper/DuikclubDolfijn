@@ -1,15 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% if is_granted('ROLE_ADMIN') %}
-        <div class="text-center mb-3">
-            <a class="btn btn-primary" href="{{ path('addUser') }}">User toevoegen</a>
-        </div>
-    {% endif %}
+    <div class="text-center mb-3">
+        <a class="btn btn-primary" href="{{ path('addUser') }}">User toevoegen</a>
+    </div>
     {% if users %}
         <table class="table table-hover">
             <thead>
             <tr>
+                <th scope="col">Role</th>
                 <th scope="col">Naam</th>
                 <th scope="col">Email</th>
                 {% if is_granted('ROLE_ADMIN') %}
@@ -23,6 +22,11 @@
             <tbody>
             {% for user in users %}
                 <tr>
+                    {% if user.roles[0] == "ROLE_ADMIN" %}
+                        <td><span class="badge badge-pill badge-danger">{{ user.roles[0] }}</span></td>
+                    {% else %}
+                        <td><span class="badge badge-pill badge-success">{{ user.roles[0] }}</span></td>
+                    {% endif %}
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
                     {% if is_granted('ROLE_ADMIN') %}

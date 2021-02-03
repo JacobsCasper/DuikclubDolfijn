@@ -3,7 +3,7 @@
 {% block body %}
     {% if homePageEnabledPages is defined %}
         <div class="container">
-            <h3>Special pages</h3>
+            <h3>Paginas</h3>
             {% for page in homePageEnabledPages %}
                 <a href="/page/{{ page.id }}" class="btn btn-link">{{ page.navigationText }}</a>
             {% endfor %}

@@ -12,7 +12,11 @@
 }
 
 body{
-    padding-top: 65px;
+    background: url('../images/nasa-WKT3TE5AQu0-unsplash.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
 }
 
 .centered {

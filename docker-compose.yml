@@ -17,6 +17,11 @@ services:
       - db
     volumes:
       - ".:/app"
+  adminer:
+    image: adminer
+    restart: on-failure
+    ports:
+      - 8081:8080
   db:
     image: mysql:5.7
     environment:

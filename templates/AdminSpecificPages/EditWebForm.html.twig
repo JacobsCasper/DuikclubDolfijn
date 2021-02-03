@@ -1,17 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% if is_granted('ROLE_ADMIN') %}
-        <div class="text-center mb-3">
-            <a class="btn btn-primary" href="{{ path('addStringElement', {'id': currentForm.id}) }}">Text</a>
-        </div>
-    {% endif %}
+    <div class="text-center mb-3">
+        <a class="btn btn-primary" href="{{ path('addStringElement', {'id': currentForm.id}) }}">Text</a>
+        <a class="btn btn-primary" href="{{ path('addEmailElement', {'id': currentForm.id}) }}">Email</a>
+        <a class="btn btn-primary" href="{{ path('addIntElement', {'id': currentForm.id}) }}">Getal</a>
+        <a class="btn btn-primary" href="{{ path('addRadioElement', {'id': currentForm.id}) }}">Meerkeuze</a>
+    </div>
+    <div class="text-center mb-3">
+        {% if currentForm.open == true %}
+            <a class="btn btn-warning" href="{{ path('closeForm', {'id': currentForm.id}) }}">Close</a>
+        {% else %}
+            <a class="btn btn-warning" href="{{ path('openForm', {'id': currentForm.id}) }}">Open</a>
+        {% endif %}
+    </div>
     {% if formElements %}
         <table class="table table-hover">
             <thead>
             <tr>
-                <th scope="col">id</th>
-                <th scope="col">formID</th>
+                <th scope="col">Position</th>
                 <th scope="col">Label</th>
                 <th scope="col">Type</th>
                 {% if is_granted('ROLE_ADMIN') %}
@@ -25,8 +32,7 @@
             <tbody>
             {% for element in formElements %}
                 <tr>
-                    <td>{{ element.id }}</td>
-                    <td>{{ element.parentId }}</td>
+                    <td>{{ element.position }}</td>
                     <td>{{ element.label }}</td>
                     <td>{{ element.type }}</td>
                     {% if is_granted('ROLE_ADMIN') %}
@@ -39,6 +45,23 @@
             {% endfor %}
             </tbody>
         </table>
+            {% if form is defined %}
+                <hr>
+                <div>
+                    <div class="text-center mb-3">
+                        <h3>Voorbeeld</h3>
+                    </div>
+                    {% if formTitle is defined%}
+                        <h5 class="card-title text-center">{{ formTitle }}</h5>
+                    {% endif %}
+                    {{ form_start(form) }}
+                    <div>
+                        <hr>
+                        {{ form_widget(form) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            {% endif %}
     {% endif %}
 {% endblock %}
 

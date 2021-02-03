@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-sm navbar-light bg-light mb-0 fixed-top header" id="myHeader">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-0 fixed-top header" id="myHeader">
     <div class="container">
         <a href="/" class="navbar-brand mx-3">
             Duikclub Dolfijn
@@ -43,7 +43,7 @@
                         <a class="dropdown-item" href="#">Contact</a>
                     </div>
                 </li>
-                {% if app.user %}
+                {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item dropdown show">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
                         <div class="dropdown-menu">
@@ -64,6 +64,16 @@
                             <a class="dropdown-item" href="{{ path('logout') }}">Logout</a>
 
                         </div>
+                    </li>
+                {% endif %}
+
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a href="{{ path('logout') }}" class="nav-link">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{{ path('login') }}" class="nav-link">Login</a>
                     </li>
                 {% endif %}
             </ul>
