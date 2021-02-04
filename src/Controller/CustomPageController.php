@@ -12,6 +12,7 @@ use App\Entity\WebFormEmailType;
 use App\Entity\WebFormIntType;
 use App\Entity\WebFormRadioType;
 use App\Entity\WebFormStringType;
+use App\Services\AddGlobalsService;
 use App\Services\FileService;
 use App\Services\FormTemplateGenerator;
 use App\Services\publishedPageFilter;
@@ -45,6 +46,7 @@ class CustomPageController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
     public function getAllPages(Request $request, PaginatorInterface $paginator){
+        $this->getGlobalVars();
         $pages = $this->getDoctrine()->getRepository(Page::class)->findAll();
         $query = array_reverse($pages);
 
@@ -54,8 +56,7 @@ class CustomPageController extends AbstractController
             10
         );
 
-        $navbarPages = $this->getCustomPages();
-        return $this->render("AdminSpecificPages/customPagesOverview.html.twig", array('pages' => $navbarPages, 'allPages' => $results));
+        return $this->render("AdminSpecificPages/customPagesOverview.html.twig", array('allPages' => $results));
     }
 
     /**
@@ -63,6 +64,7 @@ class CustomPageController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
     public function addPage(Request $request, SluggerInterface $slugger){
+        $this->getGlobalVars();
         $fileService = new FileService();
         $page = new Page();
 
@@ -94,12 +96,9 @@ class CustomPageController extends AbstractController
             return $this->redirectToRoute('getAllPages');
         }
 
-        $pages = $this->getCustomPages();
-
         return $this->render('forms/defaultBigForms.html.twig', array(
             'header' => 'Nieuwe pagina',
-            'form' => $form->createView(),
-            'pages' => $pages
+            'form' => $form->createView()
         ));
 
     }
@@ -123,6 +122,7 @@ class CustomPageController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
     public function editPage(Request $request, SluggerInterface $slugger, $id){
+        $this->getGlobalVars();
         $fileService = new FileService();
         $page = $this->getDoctrine()->getRepository(Page::class)->find($id);
         $form = $this->getPageForm($page, 'edit');
@@ -153,12 +153,9 @@ class CustomPageController extends AbstractController
             return $this->redirectToRoute("getAllPages");
         }
 
-        $pages = $this->getCustomPages();
-
         return $this->render('forms/defaultBigForms.html.twig', array(
             'header' => 'Nieuwe pagina',
-            'form' => $form->createView(),
-            'pages' => $pages
+            'form' => $form->createView()
         ));
     }
 
@@ -166,13 +163,19 @@ class CustomPageController extends AbstractController
      * @Route("/page/{id}", name="getPage")
      */
     public function getPage($id, Request $request){
-        $pages = $this->getCustomPages();
+        $this->getGlobalVars();
         $page = $this->getDoctrine()->getRepository(Page::class)->find($id);
         $webForm = null;
         if($page->getFormId() != -1 || $page->getFormId() != null){
             $webForm = $this->getDoctrine()->getRepository(WebForm::class)->find($page->getFormId());
         }
         if($page != null && $page->getPublished()){
+            if($webForm == null){
+                return $this->render("defaultPages/customPageTemplate.html.twig"
+                    , array(
+                        'customPageInfo' => $page,
+                    ));
+            }
             if($webForm->getOpen()){
                 $formElements = $this->getElements($webForm);
                 $formTemplate = $this->formTemplateGenerator->getForm($formElements, $this->createFormBuilder(), "Submit")->getForm();
@@ -191,7 +194,6 @@ class CustomPageController extends AbstractController
 
                     return $this->render("defaultPages/customPageTemplate.html.twig"
                         , array(
-                            'pages' => $pages,
                             'customPageInfo' => $page,
                             'form' => $formTemplate->createView(),
                             'formTitle' => $webForm->getTitle()
@@ -200,15 +202,14 @@ class CustomPageController extends AbstractController
 
                 return $this->render("defaultPages/customPageTemplate.html.twig"
                     , array(
-                        'pages' => $pages,
                         'customPageInfo' => $page,
                         'form' => $formTemplate->createView(),
                         'formTitle' => $webForm->getTitle()
                     ));
             }
-            return $this->render("defaultPages/customPageTemplate.html.twig", array('pages' => $pages, 'customPageInfo' => $page));
+            return $this->render("defaultPages/customPageTemplate.html.twig", array('customPageInfo' => $page));
         }
-        return $this->render("defaultPages/home.html.twig", array('pages' => $pages));
+        return $this->render("defaultPages/home.html.twig");
 
     }
 
@@ -260,9 +261,8 @@ class CustomPageController extends AbstractController
             ))
             ->getForm();
     }
-
-    private function getCustomPages(){
-        return publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll());
+    private function getGlobalVars(){
+        AddGlobalsService::addGlobals($this->get('twig'), publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll()));
     }
 
     private function mapChoices($webForms){

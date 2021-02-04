@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\CalenderItem;
 use App\Entity\NieuwsItem;
 use App\Entity\Page;
+use App\Services\AddGlobalsService;
 use App\Services\publishedPageFilter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,15 +15,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 
 class HomeController extends AbstractController {
+
+
     /**
      * @Route("/", name="home")
      */
     public function index()
     {
-        $pages = $this->getCustomPages();
+        $this->getGlobalVars();
         $homePageEnabled = $this->getHomePageEnabledPages();
 
-        return $this->render('defaultPages/home.html.twig', array('pages' => $pages, 'homePageEnabledPages' => $homePageEnabled));
+        return $this->render('defaultPages/home.html.twig', array('homePageEnabledPages' => $homePageEnabled));
     }
 
     /**
@@ -30,12 +33,12 @@ class HomeController extends AbstractController {
      */
     public function leerDuiken()
     {
-        $pages = $this->getCustomPages();
-        return $this->render('defaultPages/leerDuiken.html.twig', array('pages' => $pages));
+        $this->getGlobalVars();
+        return $this->render('defaultPages/leerDuiken.html.twig');
     }
 
-    private function getCustomPages(){
-        return publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll());
+    private function getGlobalVars(){
+        AddGlobalsService::addGlobals($this->get('twig'), publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll()));
     }
     private function getHomePageEnabledPages(){
         return publishedPageFilter::filterHomePageEnabled($this->getDoctrine()->getRepository(Page::class)->findAll());

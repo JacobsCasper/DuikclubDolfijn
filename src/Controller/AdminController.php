@@ -7,6 +7,7 @@ namespace App\Controller;
 
 use App\Entity\Page;
 use App\Entity\User;
+use App\Services\AddGlobalsService;
 use App\Services\publishedPageFilter;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -36,6 +37,7 @@ class AdminController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
     public function getUsers(Request $request, PaginatorInterface $paginator){
+        $this->getGlobalVars();
         $users = $this->getDoctrine()->getRepository(User::class)->findAll();
 
         $results = $paginator->paginate(
@@ -43,8 +45,7 @@ class AdminController extends AbstractController
             $request->query->getInt('page', 1),
             2 //TODO: als er maar 1 entity is of als de limit op 1 word gezet dan geeft de site een bad request
         );
-        $pages = $this->getCustomPages();
-        return $this->render('AdminSpecificPages/users.html.twig', array('users' => $results, 'pages' => $pages));
+        return $this->render('AdminSpecificPages/users.html.twig', array('users' => $results));
     }
 
     /**
@@ -53,6 +54,7 @@ class AdminController extends AbstractController
      */
     public function addUser(Request $request)
     {
+        $this->getGlobalVars();
         $user = new User();
         $form = $this->getUserForm($user, 'create');
         $form->handleRequest($request);
@@ -75,11 +77,9 @@ class AdminController extends AbstractController
 
             return $this->render("defaultPages/home.html.twig");
         }
-        $pages = $this->getCustomPages();
         return $this->render('forms/defaultForms.html.twig', array(
             'header' => 'Gebruiker aanmmaken',
-            'form' => $form->createView(),
-            'pages' => $pages
+            'form' => $form->createView()
         ));
     }
 
@@ -126,7 +126,7 @@ class AdminController extends AbstractController
 
     }
 
-    private function getCustomPages(){
-        return publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll());
+    private function getGlobalVars(){
+        AddGlobalsService::addGlobals($this->get('twig'), publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll()));
     }
 }

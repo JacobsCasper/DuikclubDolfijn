@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\CalenderItem;
 use App\Entity\NieuwsItem;
 use App\Entity\Page;
+use App\Services\AddGlobalsService;
 use App\Services\CalenderTypes;
 use App\Services\FileService;
 use App\Services\publishedPageFilter;
@@ -31,10 +32,10 @@ class NieuwsController extends AbstractController {
      */
     public function nieuws()
     {
+        $this->getGlobalVars();
         $nieuwsItems = $this->getDoctrine()->getRepository(NieuwsItem::class)->findAll();
-        $pages = $this->getCustomPages();
 
-        return $this->render('defaultPages/nieuws.html.twig', array('nieuwsItems' => array_reverse($nieuwsItems), 'pages' => $pages));
+        return $this->render('defaultPages/nieuws.html.twig', array('nieuwsItems' => array_reverse($nieuwsItems)));
     }
 
     /**
@@ -43,6 +44,7 @@ class NieuwsController extends AbstractController {
      */
     public function addNieuws(Request $request, SluggerInterface $slugger)
     {
+        $this->getGlobalVars();
         $fileService = new FileService();
         $item = new NieuwsItem();
 
@@ -71,12 +73,10 @@ class NieuwsController extends AbstractController {
 
             return $this->redirectToRoute('nieuws');
         }
-        $pages = $this->getCustomPages();
 
         return $this->render('forms/defaultBigForms.html.twig', array(
             'header' => 'Nieuw Nieuws item',
-            'form' => $form->createView(),
-            'pages' => $pages
+            'form' => $form->createView()
         ));
 
     }
@@ -86,10 +86,10 @@ class NieuwsController extends AbstractController {
      */
     public function nieuwsItem($id)
     {
+        $this->getGlobalVars();
         $nieuwsItem = $this->getDoctrine()->getRepository(NieuwsItem::class)->find($id);
-        $pages = $this->getCustomPages();
 
-        return $this->render('defaultPages/nieuwsItem.html.twig', array('nieuwsItem' => $nieuwsItem, 'pages' => $pages));
+        return $this->render('defaultPages/nieuwsItem.html.twig', array('nieuwsItem' => $nieuwsItem));
     }
 
     /**
@@ -113,6 +113,7 @@ class NieuwsController extends AbstractController {
      */
     public function editNieuwsItem(Request $request, SluggerInterface $slugger, $id)
     {
+        $this->getGlobalVars();
         $fileService = new FileService();
         $item = $this->getDoctrine()->getRepository(NieuwsItem::class)->find($id);
         $form = $this->getNieuwsItemForm($item, 'save');
@@ -143,12 +144,10 @@ class NieuwsController extends AbstractController {
 
             return $this->redirectToRoute('nieuws');
         }
-        $pages = $this->getCustomPages();
 
         return $this->render('forms/defaultBigForms.html.twig', array(
             'header' => 'Edit',
-            'form' => $form->createView(),
-            'pages' => $pages
+            'form' => $form->createView()
         ));
 
     }
@@ -179,7 +178,7 @@ class NieuwsController extends AbstractController {
             ->getForm();
     }
 
-    private function getCustomPages(){
-        return publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll());
+    private function getGlobalVars(){
+        AddGlobalsService::addGlobals($this->get('twig'), publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll()));
     }
 }

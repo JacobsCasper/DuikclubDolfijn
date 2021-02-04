@@ -11,10 +11,10 @@
         <script src="https://kit.fontawesome.com/26d4a64054.js"></script>
         {% block stylesheets %}{% endblock %}
     </head>
-    <body>
+    <body style="background-image:url('{{ backgroundImage }}')">
     {{ include('inc/navbar.html.twig') }}
 
-    <div class="container mt-5">
+    <div class="container mt-5" >
         <div class="card border-0 shadow my-5">
             <div class="card-body p-5">
                 {% block body %}{% endblock %}

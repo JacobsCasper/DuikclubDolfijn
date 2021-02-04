@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Page;
+use App\Services\AddGlobalsService;
 use App\Services\publishedPageFilter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,15 +17,14 @@ class SecurityController extends AbstractController
      */
     public function login(Request $request, AuthenticationUtils $utils)
     {
+        $this->getGlobalVars();
+
         $error = $utils->getLastAuthenticationError();
         $lastUsername = $utils->getLastUsername();
 
-        $pages = $this->getCustomPages();
-
         return $this->render('security/login.html.twig', [
             'error' => $error,
-            'last_username' => $lastUsername,
-            'pages' => $pages
+            'last_username' => $lastUsername
         ]);
     }
 
@@ -36,7 +36,7 @@ class SecurityController extends AbstractController
 
     }
 
-    private function getCustomPages(){
-        return publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll());
+    private function getGlobalVars(){
+        AddGlobalsService::addGlobals($this->get('twig'), publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll()));
     }
 }

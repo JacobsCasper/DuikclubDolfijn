@@ -23,9 +23,13 @@
     <!-- Footer Elements -->
 
     <!-- Copyright -->
-    <div class="footer-copyright text-center py-3">© 2020 Copyright: Duikclub Dolfijn <br>
+    <div class="footer-copyright text-center py-3">© 2021 Copyright: Duikclub Dolfijn <br>
         <a href="#">privacy verklaring </a>-
-        <a href="{{ path('login') }}"> admin</a>
+        {% if app.user %}
+            <a href="{{ path('logout') }}"> logout</a>
+        {% else %}
+            <a href="{{ path('login') }}"> login</a>
+        {% endif %}
     </div>
     <!-- Copyright -->
 

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\CalenderItem;
 use App\Entity\Page;
+use App\Services\AddGlobalsService;
 use App\Services\CalenderTypes;
 use App\Services\publishedPageFilter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -28,6 +29,7 @@ class CalenderController extends AbstractController {
      */
     public function kalender(Request $request, PaginatorInterface $paginator)
     {
+        $this->getGlobalVars();
         $calenderItems = $this->getDoctrine()->getRepository(CalenderItem::class)->findAll();
         $query = array_reverse($calenderItems);
 
@@ -36,8 +38,7 @@ class CalenderController extends AbstractController {
             $request->query->getInt('page', 1),
             9
         );
-        $pages = $this->getCustomPages();
-        return $this->render('defaultPages/kalender.html.twig', array('calenderItems' => $results, 'pages' => $pages));
+        return $this->render('defaultPages/kalender.html.twig', array('calenderItems' => $results));
     }
 
     /**
@@ -46,6 +47,7 @@ class CalenderController extends AbstractController {
      */
     public function addCalItem(Request $request)
     {
+        $this->getGlobalVars();
         $item = new CalenderItem();
 
         $form = $this->getCalenderItemForm($item, 'create');
@@ -65,11 +67,9 @@ class CalenderController extends AbstractController {
             return $this->redirectToRoute('kalender');
         }
 
-        $pages = $this->getCustomPages();
         return $this->render('forms/defaultForms.html.twig', array(
             'header' => 'Nieuw kalender item',
-            'form' => $form->createView(),
-            'pages' => $pages
+            'form' => $form->createView()
         ));
     }
 
@@ -93,9 +93,9 @@ class CalenderController extends AbstractController {
      */
     public function calItem($id)
     {
+        $this->getGlobalVars();
         $kalenderItem = $this->getDoctrine()->getRepository(CalenderItem::class)->find($id);
-        $pages = $this->getCustomPages();
-        return $this->render('defaultPages/kalenderItem.html.twig', array('kalenderItem' => $kalenderItem, 'pages' => $pages));
+        return $this->render('defaultPages/kalenderItem.html.twig', array('kalenderItem' => $kalenderItem));
     }
 
     private function getCalenderItemForm($calenderItem, $buttonName){
@@ -134,7 +134,7 @@ class CalenderController extends AbstractController {
 
     }
 
-    private function getCustomPages(){
-        return publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll());
+    private function getGlobalVars(){
+        AddGlobalsService::addGlobals($this->get('twig'), publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll()));
     }
 }

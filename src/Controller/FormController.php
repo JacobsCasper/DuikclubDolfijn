@@ -9,6 +9,7 @@ use App\Entity\WebFormEmailType;
 use App\Entity\WebFormIntType;
 use App\Entity\WebFormRadioType;
 use App\Entity\WebFormStringType;
+use App\Services\AddGlobalsService;
 use App\Services\FormTemplateGenerator;
 use App\Services\publishedPageFilter;
 use Knp\Component\Pager\PaginatorInterface;
@@ -34,6 +35,7 @@ class FormController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
     public function getForms(Request $request, PaginatorInterface $paginator){
+        $this->getGlobalVars();
         //get forms
 
 
@@ -56,10 +58,9 @@ class FormController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
-        $pages = $this->getCustomPages();
 
         return $this->render('AdminSpecificPages/forms.html.twig'
-            , array('forms' => $results, 'pages' => $pages, 'form' => $form->createView()));
+            , array('forms' => $results, 'form' => $form->createView()));
     }
 
     /**
@@ -67,8 +68,8 @@ class FormController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
     public function editForm($id){
+        $this->getGlobalVars();
         $webForm = $this->getDoctrine()->getRepository(WebForm::class)->find($id);
-        $pages = $this->getCustomPages();
         $formElements = $this->getElements($webForm);
 
         $formTemplate = $this->formTemplateGenerator->getForm($formElements, $this->createFormBuilder())->getForm();
@@ -77,7 +78,6 @@ class FormController extends AbstractController
             , array(
                 'formElements' => $formElements,
                 'currentForm' => $webForm,
-                'pages' => $pages,
                 'form' => $formTemplate->createView(),
                 'formTitle' => $webForm->getTitle()
             ));
@@ -112,8 +112,8 @@ class FormController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
     public function addStringElement($id, Request $request){
+        $this->getGlobalVars();
         $webForm = $this->getDoctrine()->getRepository(WebForm::class)->find($id);
-        $pages = $this->getCustomPages();
 
         $stringElement = new WebFormStringType();
         $form = $this->getNewStringElement($stringElement);
@@ -145,7 +145,6 @@ class FormController extends AbstractController
                 , array(
                     'formElements' => $formElements,
                     'currentForm' => $webForm,
-                    'pages' => $pages,
                     'form' => $formTemplate->createView(),
                     'formTitle' => $webForm->getTitle()
                 ));
@@ -153,8 +152,7 @@ class FormController extends AbstractController
 
         return $this->render('forms/defaultForms.html.twig', array(
             'header' => 'Nieuwe rij',
-            'form' => $form->createView(),
-            'pages' => $pages
+            'form' => $form->createView()
         ));
     }
 
@@ -163,8 +161,8 @@ class FormController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
     public function addEmailElement($id, Request $request){
+        $this->getGlobalVars();
         $webForm = $this->getDoctrine()->getRepository(WebForm::class)->find($id);
-        $pages = $this->getCustomPages();
 
         $emailElement = new WebFormEmailType();
         $form = $this->getNewEmailElement($emailElement);
@@ -188,7 +186,6 @@ class FormController extends AbstractController
                 , array(
                     'formElements' => $formElements,
                     'currentForm' => $webForm,
-                    'pages' => $pages,
                     'form' => $formTemplate->createView(),
                     'formTitle' => $webForm->getTitle()
                 ));
@@ -196,8 +193,7 @@ class FormController extends AbstractController
 
         return $this->render('forms/defaultForms.html.twig', array(
             'header' => 'Nieuwe rij',
-            'form' => $form->createView(),
-            'pages' => $pages
+            'form' => $form->createView()
         ));
     }
 
@@ -206,8 +202,8 @@ class FormController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
     public function addIntElement($id, Request $request){
+        $this->getGlobalVars();
         $webForm = $this->getDoctrine()->getRepository(WebForm::class)->find($id);
-        $pages = $this->getCustomPages();
 
         $intElement = new WebFormIntType();
         $form = $this->getNewIntElement($intElement);
@@ -230,7 +226,6 @@ class FormController extends AbstractController
                 , array(
                     'formElements' => $formElements,
                     'currentForm' => $webForm,
-                    'pages' => $pages,
                     'form' => $formTemplate->createView(),
                     'formTitle' => $webForm->getTitle()
                 ));
@@ -238,8 +233,7 @@ class FormController extends AbstractController
 
         return $this->render('forms/defaultForms.html.twig', array(
             'header' => 'Nieuwe rij',
-            'form' => $form->createView(),
-            'pages' => $pages
+            'form' => $form->createView()
         ));
     }
 
@@ -248,8 +242,8 @@ class FormController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
     public function addRadioElement($id, Request $request){
+        $this->getGlobalVars();
         $webForm = $this->getDoctrine()->getRepository(WebForm::class)->find($id);
-        $pages = $this->getCustomPages();
 
         $radioElement = new WebFormRadioType();
         $form = $this->getNewRadioElement($radioElement);
@@ -276,7 +270,6 @@ class FormController extends AbstractController
                 , array(
                     'formElements' => $formElements,
                     'currentForm' => $webForm,
-                    'pages' => $pages,
                     'form' => $formTemplate->createView(),
                     'formTitle' => $webForm->getTitle()
                 ));
@@ -284,8 +277,7 @@ class FormController extends AbstractController
 
         return $this->render('forms/defaultForms.html.twig', array(
             'header' => 'Nieuwe rij',
-            'form' => $form->createView(),
-            'pages' => $pages
+            'form' => $form->createView()
         ));
     }
 
@@ -294,7 +286,7 @@ class FormController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
     public function addForm(Request $request){
-        $pages = $this->getCustomPages();
+        $this->getGlobalVars();
 
         //add form
         $webForm = new WebForm();
@@ -312,7 +304,7 @@ class FormController extends AbstractController
             return $this->redirectToRoute('editForm', array('id' => $webForm->getId()));
         }
 
-        return $this->render('forms/defaultForms.html.twig', array('pages' => $pages, 'form' => $form->createView()));
+        return $this->render('forms/defaultForms.html.twig', array('form' => $form->createView()));
     }
 
 
@@ -421,8 +413,8 @@ class FormController extends AbstractController
         return true;
     }
 
-    private function getCustomPages(){
-        return publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll());
+    private function getGlobalVars(){
+        AddGlobalsService::addGlobals($this->get('twig'), publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll()));
     }
 
     private function addWebFormElementsToArray($elements, $arrayToAdd){

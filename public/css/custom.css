@@ -11,8 +11,23 @@
 .dropdown-item{
 }
 
+.banner-content{
+    z-index: 1;
+    position: relative;
+    color: #f6f6f6;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.topBackgroundImage {
+    background: linear-gradient(#004092, #020202, transparent);
+    -webkit-background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    background-size: 100% 100%;
+    -o-background-size: 100% 100%;
+}
+
 body{
-    background: url('../images/nasa-WKT3TE5AQu0-unsplash.jpg') no-repeat center center fixed;
+    background: no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
