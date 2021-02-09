@@ -2,6 +2,8 @@
 
 {% block body %}
     {% if kalenderItem %}
+
+        {% set role = is_granted('ROLE_ADMIN') %}
         <div class="jumbotron">
             <h1 class="display-3">{{ kalenderItem.title }}</h1>
             <p class="lead">{{ kalenderItem.description }}</p>
@@ -9,9 +11,47 @@
             <p>{{ kalenderItem.details }}</p>
             <p class="lead blockquote-footer">{{ kalenderItem.submitDate }} door {{ kalenderItem.author }}</p>
 
-            {% if is_granted('ROLE_ADMIN') %}
-                <a class="btn btn-danger" href="/kalender/remove/{{ kalenderItem.id }}">delete</a>
-                <a class="btn btn-warning" href="/kalender/edit/{{ kalenderItem.id }}">edit</a>
+            {% if app.user %}
+                {% if app.user in users %}
+                {% else %}
+                    <a class="btn btn-info" href="{{ path('subUser', {'calId': kalenderItem.id, 'userId': app.user.id }) }}">inschrijven</a>
+                {% endif %}
+                {% if role %}
+                    <a class="btn btn-danger" href="{{ path('removeCalItem', {'id': kalenderItem.id }) }}">delete</a>
+                    <a class="btn btn-warning" href="{{ path('editCalItem', {'id': kalenderItem.id}) }}">edit</a>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div>
+            {% if app.user %}
+                    <h1 class="text-center m-5">
+                        Inschrijvingen
+                    </h1>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">Naam</th>
+                            <th scope="col">Email</th>
+                            {% if role %}
+                                <th scope="col">Remove</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                {% if role %}
+                                    <td><a class="btn btn-warning" href="{{ path('removeSub', {'calId': kalenderItem.id, 'userId': user.id }) }}">remove</a></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        {{ knp_pagination_render(users) }}
+                    </div>
             {% endif %}
         </div>
     {% endif %}

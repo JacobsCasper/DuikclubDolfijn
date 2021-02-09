@@ -3,10 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\CalenderItemRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\OneToMany;
 use mysql_xdevapi\Exception;
+use function Symfony\Component\String\u;
 
 /**
  * @ORM\Entity(repositoryClass=CalenderItemRepository::class)
@@ -61,9 +66,11 @@ class CalenderItem
     private $details;
 
     /**
-     * @OneToMany(targetEntity="UserSubscription", mappedBy="CalenderItem")
+     * Many CalenderItems have Many Users.
+     * @ManyToMany(targetEntity="User", inversedBy="CalenderItems")
+     * @JoinTable(name="users_calenderItems")
      */
-    private $UserSubscriptions;
+    private $users;
 
     /**
      * @ORM\Column (type="integer")
@@ -76,23 +83,23 @@ class CalenderItem
     private $subscriptionEndDate;
 
     public function __construct() {
-        $this->UserSubscriptions = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getUserSubscriptions(): ArrayCollection
+    public function getUsers(): Collection
     {
-        return $this->UserSubscriptions;
+        return $this->users;
     }
 
     /**
-     * @param ArrayCollection $UserSubscriptions
+     * @param Collection $users
      */
-    public function setUserSubscriptions(ArrayCollection $UserSubscriptions): void
+    public function setUsers(Collection $users): void
     {
-        $this->UserSubscriptions = $UserSubscriptions;
+        $this->users = $users;
     }
 
     /**
@@ -270,14 +277,14 @@ class CalenderItem
 
 
     public function maxSubscriptionsReached(){
-        if(count($this->UserSubscriptions) >= $this->maxSubscriptions){
+        if(count($this->getUsers()) >= $this->maxSubscriptions){
             return true;
         }
         return false;
     }
 
     public function subscriptionDateExpired(){
-        $today = strtotime("today midnight");
+        $today = new DateTime();
 
         if($today >= $this->endDate){
             return true; //expired
@@ -293,13 +300,19 @@ class CalenderItem
         }
     }
 
-    public function addSubscriber(UserSubscription $subscription){
+    public function addSubscriber(User $user): bool
+    {
         if($this->maxSubscriptionsReached() || $this->subscriptionDateExpired()){
             return false;
         } else {
-            $this->UserSubscriptions = $subscription;
+            $this->getUsers()->add($user);
             return true;
         }
+    }
+
+    public function removeSubscriber(User $user): void
+    {
+        $this->getUsers()->remove($user->getId());
     }
 
 }

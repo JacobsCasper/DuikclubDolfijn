@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\CalenderItem;
 use App\Entity\Page;
+use App\Entity\User;
 use App\Services\AddGlobalsService;
 use App\Services\CalenderTypes;
 use App\Services\publishedPageFilter;
@@ -67,8 +68,38 @@ class CalenderController extends AbstractController {
             return $this->redirectToRoute('kalender');
         }
 
-        return $this->render('forms/defaultForms.html.twig', array(
+        return $this->render('forms/defaultBigForms.html.twig', array(
             'header' => 'Nieuw kalender item',
+            'form' => $form->createView()
+        ));
+    }
+
+    /**
+     * @Route("/kalender/edit/{id}", name="editCalItem")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function editCalItem($id, Request $request, PaginatorInterface $paginator)
+    {
+        $this->getGlobalVars();
+        $item = $this->getDoctrine()->getRepository(CalenderItem::class)->find($id);
+
+        $form = $this->getCalenderItemForm($item, 'save');
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $user = $this->getUser();
+            $item = $form->getData();
+            $item->setAuthor($user->getUsername());
+            $item->setSubmitDate(new \DateTime());
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
+            return $this->redirectToRoute('kalender');
+        }
+
+        return $this->render('forms/defaultBigForms.html.twig', array(
+            'header' => 'Edit kalender item',
             'form' => $form->createView()
         ));
     }
@@ -91,11 +122,16 @@ class CalenderController extends AbstractController {
     /**
      * @Route("/kalender/{id}", name="calItem")
      */
-    public function calItem($id)
+    public function calItem($id,Request $request, PaginatorInterface $paginator)
     {
         $this->getGlobalVars();
         $kalenderItem = $this->getDoctrine()->getRepository(CalenderItem::class)->find($id);
-        return $this->render('defaultPages/kalenderItem.html.twig', array('kalenderItem' => $kalenderItem));
+        $users = $paginator->paginate(
+            $kalenderItem->getUsers(),
+            $request->query->getInt('page', 1),
+            10
+        );
+        return $this->render('defaultPages/kalenderItem.html.twig', array('kalenderItem' => $kalenderItem, 'users' => $users));
     }
 
     private function getCalenderItemForm($calenderItem, $buttonName){

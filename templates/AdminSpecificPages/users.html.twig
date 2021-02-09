@@ -31,8 +31,6 @@
                     <td>{{ user.email }}</td>
                     {% if is_granted('ROLE_ADMIN') %}
                         <td><a class="btn btn-danger" href="{{ path('removeUser', {'id': user.id }) }}">delete</a></td>
-                    {% endif %}
-                    {% if is_granted('ROLE_ADMIN') %}
                         <td><a class="btn btn-warning" href="#">edit</a></td>
                     {% endif %}
                 </tr>

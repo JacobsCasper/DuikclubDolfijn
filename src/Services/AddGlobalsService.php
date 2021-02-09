@@ -9,7 +9,7 @@ class AddGlobalsService
 {
 
     public static function getImage(){
-        $dirname = "images/";
+        $dirname = "backgroundImages/";
         $pngs = glob($dirname."*.png");
         $jpegs = glob($dirname."*.jpeg");
         $jpgs = glob($dirname."*.jpg");
