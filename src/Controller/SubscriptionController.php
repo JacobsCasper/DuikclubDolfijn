@@ -37,7 +37,7 @@ class SubscriptionController extends AbstractController
      * @Route("/remove/{calId}/{userId}", name="removeSub")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function removeSub($calId, $userId) //TODO: user word nog niet verwijderd
+    public function removeSub($calId, $userId)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
         $cal = $this->getDoctrine()->getRepository(CalenderItem::class)->find($calId);

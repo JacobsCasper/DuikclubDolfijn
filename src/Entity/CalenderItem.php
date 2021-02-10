@@ -312,7 +312,12 @@ class CalenderItem
 
     public function removeSubscriber(User $user): void
     {
-        $this->getUsers()->remove($user->getId());
+        $filtered_collection = $this->getUsers()->filter(function ($item) use ($user) {
+            return !$item->equals($user);
+        });
+
+        $this->setUsers($filtered_collection);
     }
+
 
 }

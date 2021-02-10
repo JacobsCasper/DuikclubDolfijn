@@ -154,4 +154,12 @@ class User implements UserInterface, \Serializable
             $this->password
         ) = unserialize($serialized, ['allowed_classes' => false]);
     }
+
+    public function equals(User $user): bool
+    {
+        if($user->getEmail() == $this->getEmail() && $user->getId() == $this->getId()){
+            return true;
+        }
+        return false;
+    }
 }
