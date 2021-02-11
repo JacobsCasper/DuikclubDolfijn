@@ -16,6 +16,19 @@
             <p class="card-text">{{ customPageInfo.body | raw }}</p>
             <p class="card-text">{{ customPageInfo.submitDate }} door {{ customPageInfo.author }}</p>
         </div>
+        {% if docs is defined %}
+            <hr>
+            <div>
+                <ul>
+                    {% for doc in docs %}
+                        <li>1doc</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <hr>
+        {% endif %}
+
+
         {% if form is defined %}
             <hr>
             <div>

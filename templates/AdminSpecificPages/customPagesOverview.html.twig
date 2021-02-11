@@ -10,8 +10,8 @@
     <tr>
         <th scope="col">Id</th>
         <th scope="col">Titel</th>
-        <th scope="col">Datum</th>
         <th scope="col">Gepubliceerd</th>
+        <th scope="col">Manage files</th>
         <th scope="col">Edit</th>
         <th scope="col">Delete</th>
     </tr>
@@ -21,7 +21,6 @@
         <tr>
             <th scope="row">{{ item.id }}</th>
             <th scope="row">{{ item.title }}</th>
-            <th scope="row">{{ item.submitDate }}</th>
             {% if item.published %}
                 <th scope="row">
                     <span class="badge badge-pill badge-success">gepubliceerd</span>
@@ -31,6 +30,7 @@
                     <span class="badge badge-pill badge-danger">niet gepubliceerd</span>
                 </th>
             {% endif %}
+            <td><a class="btn btn-info" href="{{ path('getPageFiles', {'id': item.id}) }}">manage</a></td>
             <td><a class="btn btn-warning" href="/page/edit/{{ item.id }}">edit</a></td>
             <td><a class="btn btn-danger" href="/page/remove/{{ item.id }}">delete</a></td>
         </tr>

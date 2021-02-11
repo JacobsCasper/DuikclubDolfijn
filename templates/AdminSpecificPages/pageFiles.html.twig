@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if files is defined %}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Naam</th>
+                <th scope="col">Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in files %}
+                <tr>
+                    <th scope="row">{{ item }}</th>
+                    <td><a class="btn btn-danger" href="{{ path('removeFile', {'id': pageId, 'name': item}) }}">delete</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    <div style="display: flex; justify-content: center; align-items: center;">
+        {{ knp_pagination_render(files) }}
+    </div>
+    {% if form is defined %}
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                    <div class="card card-signin my-5">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Nieuw file toevoegen</h5>
+                            {{ form_start(form) }}
+                            {{ form_widget(form) }}
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

@@ -65,7 +65,6 @@ class CustomPageController extends AbstractController
      */
     public function addPage(Request $request, SluggerInterface $slugger){
         $this->getGlobalVars();
-        $fileService = new FileService();
         $page = new Page();
 
         $form = $this->getPageForm($page, 'create');
@@ -79,8 +78,7 @@ class CustomPageController extends AbstractController
             $picture = $form->get('picture')->getData();
 
             if ($picture) {
-                $newFilename = $fileService->uploadFile($picture, $slugger, $this->getParameter('uploads_directory'));
-                $page->setPicturePath($newFilename);
+                $page->setPicture($slugger, $picture, $this->getParameter('uploads_directory'));
             } else{
                 $page->setPicturePath("");
             }
@@ -110,6 +108,8 @@ class CustomPageController extends AbstractController
     public function removePage(Request $request, $id){
         $page = $this->getDoctrine()->getRepository(Page::class)->find($id);
 
+        $page->destruct($this->getParameter('uploads_directory'));
+
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($page);
         $entityManager->flush();
@@ -123,7 +123,6 @@ class CustomPageController extends AbstractController
      */
     public function editPage(Request $request, SluggerInterface $slugger, $id){
         $this->getGlobalVars();
-        $fileService = new FileService();
         $page = $this->getDoctrine()->getRepository(Page::class)->find($id);
         $form = $this->getPageForm($page, 'edit');
         $form->handleRequest($request);
@@ -131,22 +130,18 @@ class CustomPageController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
 
             $picture = $form->get('picture')->getData();
-
             if ($picture) {
                 try {
                     if($page->getPicturePath() != null || $page->getPicturePath() != ""){
-                        $path = $this->getParameter('uploads_directory') . '/' . $page->getPicturePath();
-                        unlink($path);
+                        $page->removePicture($this->getParameter('uploads_directory'));
                     }
-
-                    $newFilename = $fileService->uploadFile($picture, $slugger, $this->getParameter('uploads_directory'));
-
+                    $page->setPicture($slugger, $picture, $this->getParameter('uploads_directory'));
                 } catch (FileException $e) {
 
                 }
 
-                $page->setPicturePath($newFilename);
             }
+            $page->setSubmitDate(new \DateTime());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 

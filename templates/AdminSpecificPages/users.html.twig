@@ -11,12 +11,8 @@
                 <th scope="col">Role</th>
                 <th scope="col">Naam</th>
                 <th scope="col">Email</th>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <th scope="col">Delete</th>
-                {% endif %}
-                {% if is_granted('ROLE_ADMIN') %}
-                    <th scope="col">Edit</th>
-                {% endif %}
+                <th scope="col">Delete</th>
+                <th scope="col">Edit</th>
             </tr>
             </thead>
             <tbody>
@@ -24,15 +20,15 @@
                 <tr>
                     {% if user.roles[0] == "ROLE_ADMIN" %}
                         <td><span class="badge badge-pill badge-danger">{{ user.roles[0] }}</span></td>
+                    {% elseif user.roles[0] == "ROLE_INST" %}
+                        <td><span class="badge badge-pill badge-warning">{{ user.roles[0] }}</span></td>
                     {% else %}
                         <td><span class="badge badge-pill badge-success">{{ user.roles[0] }}</span></td>
                     {% endif %}
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <td><a class="btn btn-danger" href="{{ path('removeUser', {'id': user.id }) }}">delete</a></td>
-                        <td><a class="btn btn-warning" href="#">edit</a></td>
-                    {% endif %}
+                    <td><a class="btn btn-danger" href="{{ path('removeUser', {'id': user.id }) }}">delete</a></td>
+                    <td><a class="btn btn-warning" href="#">edit</a></td>
                 </tr>
             {% endfor %}
             </tbody>

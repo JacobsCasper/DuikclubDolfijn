@@ -121,7 +121,14 @@ class User implements UserInterface, \Serializable
         return array_unique($roles);
     }
 
-    public function makeAdmin(){
+    public function makeInstructor()
+    {
+        array_push($this->roles, "ROLE_INST");
+    }
+
+    public function makeAdmin()
+    {
+        array_push($this->roles, "ROLE_INST");
         array_push($this->roles, "ROLE_ADMIN");
     }
 

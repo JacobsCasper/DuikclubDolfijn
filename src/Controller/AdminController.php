@@ -12,6 +12,7 @@ use App\Services\publishedPageFilter;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,7 +44,7 @@ class AdminController extends AbstractController
         $results = $paginator->paginate(
             $users,
             $request->query->getInt('page', 1),
-            2 //TODO: als er maar 1 entity is of als de limit op 1 word gezet dan geeft de site een bad request
+            10
         );
         return $this->render('AdminSpecificPages/users.html.twig', array('users' => $results));
     }
@@ -52,7 +53,7 @@ class AdminController extends AbstractController
      * @Route("/user/add", name="addUser")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function addUser(Request $request)
+    public function addUser(Request $request, PaginatorInterface $paginator)
     {
         $this->getGlobalVars();
         $user = new User();
@@ -60,22 +61,24 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
-            $admin = $form->get('Administrator')->getData();
+            $admin = $form->get('UserRole')->getData();
 
             $user = $form->getData();
             $password = $user->getPassword();
             $user->setPassword(
                 $this->encoder->encodePassword($user, $password)
             );
-            if($admin){
+            if($admin == 2){
                 $user->makeAdmin();
+            } else if($admin == 1) {
+                $user->makeInstructor();
             }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->render("defaultPages/home.html.twig");
+            return $this->redirectToRoute('getUsers', ['request'=>$request, 'paginator'=>$paginator]);
         }
         return $this->render('forms/defaultForms.html.twig', array(
             'header' => 'Gebruiker aanmmaken',
@@ -113,11 +116,18 @@ class AdminController extends AbstractController
             ])
             ->add('email', EmailType::class,
                 array('attr' => array('class' => 'form-control'), 'label' => 'email'))
-            ->add('Administrator', CheckboxType::class, array(
+            ->add('UserRole', ChoiceType::class, [
                 'mapped' => false,
-                'label' => 'Maak van deze user een admin',
+                'label' => 'Welke rol krijgt deze user',
                 'required' => false,
-                'attr' => array('class' => 'form-control')))
+                'attr' => array('class' => 'form-control'),
+                'choices'  => [
+                    'User' => 0,
+                    'Instructeur' => 1,
+                    'Administrator' => 2,
+                ],
+                'data' => 0
+            ])
             ->add('save', SubmitType::class, array(
                 'label' => $buttonName,
                 'attr' => array('class' => 'btn btn-' . $buttonType . ' mt-3')
