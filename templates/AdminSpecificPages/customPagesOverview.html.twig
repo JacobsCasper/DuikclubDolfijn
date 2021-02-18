@@ -2,7 +2,9 @@
 
 {% block body %}
     <div class="text-center mb-3">
-        <a class="btn btn-primary" href="/page/add">Pagina toevoegen</a>
+        <a class="btn btn-primary" href="/page/add">
+            <i class="fas fa-plus"></i>&nbsp;&nbsp;
+            Pagina toevoegen</a>
     </div>
     {% if allPages is defined %}
 <table class="table table-hover">
@@ -30,9 +32,18 @@
                     <span class="badge badge-pill badge-danger">niet gepubliceerd</span>
                 </th>
             {% endif %}
-            <td><a class="btn btn-info" href="{{ path('getPageFiles', {'id': item.id}) }}">manage</a></td>
-            <td><a class="btn btn-warning" href="/page/edit/{{ item.id }}">edit</a></td>
-            <td><a class="btn btn-danger" href="/page/remove/{{ item.id }}">delete</a></td>
+            <td><a class="btn btn-info" href="{{ path('getPageFiles', {'id': item.id}) }}">
+                    <i class="fas fa-tasks"></i>&nbsp;&nbsp;
+                    Manage
+                </a></td>
+            <td><a class="btn btn-warning" href="/page/edit/{{ item.id }}">
+                    <i class="fas fa-edit"></i>&nbsp;&nbsp;
+                    Edit
+                </a></td>
+            <td><a class="btn btn-danger" href="/page/remove/{{ item.id }}">
+                    <i class="fas fa-trash"></i>&nbsp;&nbsp;
+                    Delete
+                </a></td>
         </tr>
         {% endfor %}
     </tbody>

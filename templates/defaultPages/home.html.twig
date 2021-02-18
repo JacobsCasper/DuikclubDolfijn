@@ -5,7 +5,7 @@
         <div class="container " >
             <div class="d-flex flex-column" >
                 <div class="d-flex justify-content-center w-100">
-                    <h1>Bilzer Duikclub Dolfijn</h1>
+                    <h1>Duikclub Dolfijn</h1>
                 </div>
                 <hr class="my-3 " style="width:50%" color="lightgray"/>
                 <div class="d-flex justify-content-between w-100">
@@ -38,7 +38,7 @@
             </div>
 
             <hr class="my-3 " style="width:50%" color="lightgray"/>
-            <div class="col-sm-100 mb-2 w-100">
+            <div class="col-sm-100  w-100">
                 <div class="jumbotron" style="background: none">
                     <div class="row mt-5">
                                 <div class="col">
@@ -177,35 +177,27 @@
                     </div>
                 </div>
             </div>
-            <hr class="my-3 " style="width:50%" color="lightgray"/>
-            <h1 class="text-danger text-center">#still in progres#</h1>
             <div class="jumbotron" style="background: none">
-                <h3 class="display-4 text-center">Paginas</h3>
-                <hr class="my-4">
-                <div class="d-flex justify-content-around flex-wrap">
-
-
-                        <div class="col-md-6 p-2">
-                            {% for page in homePageEnabledPages %}
-                            <a href="/page/{{ page.id }}">
-                            <div class="button-content border rounded" style="background-image: url('{{ asset('uploads/') ~ page.picturePath }}');">
+                <div class="row justify-content-md-center">
+                    {% for page in homePageEnabledPages %}
+                        <div class="col-lg-6 p-2">
+                            <div class="button-content border rounded albumCover" style="background-image: url({{ asset('uploads/') ~ page.picturePath }});">
                                 <table class="button-table w-100">
-                                    <tbody><tr>
+                                    <tbody>
+                                    <tr>
                                         <td class="text-center">
-                                            <h1 class="card-title centered headerTitle">{{ page.navigationText }}</h1>
+                                            <a href="/page/{{ page.id }}" class="foto-link">
+                                                <span class="align-middle button-text centered">{{ page.navigationText }}</span>
+                                            </a>
                                         </td>
                                     </tr>
-                                    </tbody></table>
+                                    </tbody>
+                                </table>
                             </div>
-                            </a>
-                            {% endfor %}
                         </div>
-
-
+                    {% endfor %}
                 </div>
             </div>
-
-        </div>
     {% endif %}
 {% endblock %}
 

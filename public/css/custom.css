@@ -52,3 +52,19 @@ body{
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
     max-width: 500px;
 }
+
+.albumCover{
+    min-height: 200px;
+}
+
+.foto-link, .foto-link:visited, .foto-link:hover, .foto-link:active {
+    text-decoration: none;
+    color: white;
+    display: block;
+}
+
+.button-text {
+    color: white;
+    font-size: 2.5rem;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}

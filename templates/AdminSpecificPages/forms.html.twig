@@ -8,12 +8,9 @@
             <tr>
                 <th scope="col">Id</th>
                 <th scope="col">Titel</th>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <th scope="col">Delete</th>
-                {% endif %}
-                {% if is_granted('ROLE_ADMIN') %}
-                    <th scope="col">Edit</th>
-                {% endif %}
+                <th scope="col">Antwoorden</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
             </tr>
             </thead>
             <tbody>
@@ -21,12 +18,18 @@
                 <tr>
                     <td>{{ form.id }}</td>
                     <td>{{ form.title }}</td>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <td><a class="btn btn-danger" href="#">delete</a></td>
-                    {% endif %}
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <td><a class="btn btn-warning" href="{{ path('editForm', {'id': form.id}) }}">edit</a></td>
-                    {% endif %}
+                    <td><a class="btn btn-info" href="{{ path('answers', {'id': form.id}) }}">
+                            <i class="fas fa-tasks"></i>&nbsp;&nbsp;
+                            Antwoorden
+                        </a></td>
+                    <td><a class="btn btn-warning" href="{{ path('editForm', {'id': form.id}) }}">
+                            <i class="fas fa-edit"></i>&nbsp;&nbsp;
+                            Edit
+                        </a></td>
+                    <td><a class="btn btn-danger" href="#">
+                            <i class="fas fa-trash"></i>&nbsp;&nbsp;
+                            Delete
+                        </a></td>
                 </tr>
             {% endfor %}
             </tbody>

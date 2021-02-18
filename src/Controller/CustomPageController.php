@@ -242,7 +242,7 @@ class CustomPageController extends AbstractController
                 'attr' => array('class' => 'form-control')))
             ->add('picture', FileType::class, array(
                 'mapped' => false,
-                'label' => "Upload foto",
+                'label' => "Afbeelding",
                 'attr' => array('class' => 'form-control'),
                 'required' => false))
             ->add('formId', ChoiceType::class, [

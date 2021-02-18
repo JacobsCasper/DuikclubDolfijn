@@ -1,24 +1,48 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {% set role = 0 %}
+    {% if app.user %}
+        {% if 'ROLE_INST' in app.user.roles %}
+            {% set role = 1 %}
+        {% endif %}
+    {% endif %}
     {% if kalenderItem %}
 
-        {% set role = is_granted('ROLE_ADMIN') %}
         <div class="jumbotron">
             <h1 class="display-3">{{ kalenderItem.title }}</h1>
             <p class="lead">{{ kalenderItem.description }}</p>
             <hr class="my-4">
-            <p>{{ kalenderItem.details }}</p>
+            <p>{{ kalenderItem.details | raw }}</p>
             <p class="lead blockquote-footer">{{ kalenderItem.submitDate }} door {{ kalenderItem.author }}</p>
 
             {% if app.user %}
                 {% if app.user in users %}
                 {% else %}
-                    <a class="btn btn-info" href="{{ path('subUser', {'calId': kalenderItem.id, 'userId': app.user.id }) }}">inschrijven</a>
+                    {% if kalenderItem.subscriptionDateExpired %}
+                        <div class="alert alert-danger">
+                            <strong>Oeps!</strong> Het ziet er naar uit dat de inschrijvingen voor dit evenement gesloten zijn.
+                        </div>
+                    {% elseif kalenderItem.maxSubscriptionsReached%}
+                        <div class="alert alert-danger">
+                            <strong>Oeps!</strong> Het ziet er naar uit dat de inschrijvingen voor dit evenement vol zitten.
+                        </div>
+                    {% else %}
+                        <a class="btn btn-info" href="{{ path('subUser', {'calId': kalenderItem.id, 'userId': app.user.id }) }}">
+                            <i class="fas fa-pen"></i>&nbsp;&nbsp;
+                            Inschrijven
+                        </a>
+                    {% endif %}
                 {% endif %}
                 {% if role %}
-                    <a class="btn btn-danger" href="{{ path('removeCalItem', {'id': kalenderItem.id }) }}">delete</a>
-                    <a class="btn btn-warning" href="{{ path('editCalItem', {'id': kalenderItem.id}) }}">edit</a>
+                    <a class="btn btn-warning" href="{{ path('editCalItem', {'id': kalenderItem.id}) }}">
+                        <i class="fas fa-edit"></i>&nbsp;&nbsp;
+                        Edit
+                    </a>
+                    <a class="btn btn-danger" href="{{ path('removeCalItem', {'id': kalenderItem.id }) }}">
+                        <i class="fas fa-trash"></i>&nbsp;&nbsp;
+                        Delete
+                    </a>
                 {% endif %}
             {% endif %}
         </div>
@@ -43,7 +67,10 @@
                                 <td>{{ user.username }}</td>
                                 <td>{{ user.email }}</td>
                                 {% if role %}
-                                    <td><a class="btn btn-warning" href="{{ path('removeSub', {'calId': kalenderItem.id, 'userId': user.id }) }}">remove</a></td>
+                                    <td><a class="btn btn-danger" href="{{ path('removeSub', {'calId': kalenderItem.id, 'userId': user.id }) }}">
+                                            <i class="fas fa-trash"></i>&nbsp;&nbsp;
+                                            Delete
+                                        </a></td>
                                 {% endif %}
                             </tr>
                         {% endfor %}

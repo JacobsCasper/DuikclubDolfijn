@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% set role = 0 %}
+    {% if app.user %}
+        {% set role = 1 %}
+    {% endif %}
+
+    {% if role != 0 %}
+        <div class="text-center mb-3">
+            <a class="btn btn-primary" href="{{ path('addAlbum') }}">
+                <i class="fas fa-images"></i>&nbsp;&nbsp;
+                Album toevoegen
+            </a>
+        </div>
+    {% endif %}
+
+    {% if albums is defined %}
+        <div class="row">
+            {% for album in albums %}
+                {% if role == 0 and not album.public %}
+                {% else %}
+                    <div class="col-lg-4 col-md-6 p-2">
+                        <div class="button-content border rounded albumCover" style="background-image: url({{ asset('uploads/') ~ album.picturePath }});">
+                            <table class="button-table w-100">
+                                <tbody>
+                                <tr>
+                                    <td class="text-center">
+                                        <a href="{{ album.link }}" class="foto-link" target="_blank">
+                                            <span class="align-middle button-text centered">{{ album.title }}</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

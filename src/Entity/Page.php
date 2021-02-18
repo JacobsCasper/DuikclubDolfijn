@@ -28,7 +28,7 @@ class Page
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $Author;
+    private $author;
 
     /**
      * @ORM\Column(type="string", length=6000, nullable=true)
@@ -140,15 +140,15 @@ class Page
      */
     public function getAuthor()
     {
-        return $this->Author;
+        return $this->author;
     }
 
     /**
-     * @param mixed $Author
+     * @param mixed $author
      */
-    public function setAuthor($Author): void
+    public function setAuthor($author): void
     {
-        $this->Author = $Author;
+        $this->author = $author;
     }
 
 

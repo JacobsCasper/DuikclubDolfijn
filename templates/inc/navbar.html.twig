@@ -14,16 +14,16 @@
         <div class="collapse navbar-collapse" id="mobile-nav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="/" class="nav-link">Home</a>
+                    <a href="{{ path('home') }}" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/nieuws" class="nav-link">Nieuws</a>
+                    <a href="{{ path('nieuws') }}" class="nav-link">Nieuws</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/kalender" class="nav-link">Kalender</a>
+                    <a href="{{ path('kalender') }}" class="nav-link">Kalender</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/" class="nav-link">Foto's</a>
+                    <a href="{{ path('fotos') }}" class="nav-link">Foto's</a>
                 </li>
                 {% if pages is defined %}
                     {% for page in pages %}

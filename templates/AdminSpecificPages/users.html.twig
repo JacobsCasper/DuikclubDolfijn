@@ -2,7 +2,10 @@
 
 {% block body %}
     <div class="text-center mb-3">
-        <a class="btn btn-primary" href="{{ path('addUser') }}">User toevoegen</a>
+        <a class="btn btn-primary" href="{{ path('addUser') }}">
+            <i class="fas fa-user-plus"></i>&nbsp;&nbsp;
+            User toevoegen
+        </a>
     </div>
     {% if users %}
         <table class="table table-hover">
@@ -11,24 +14,33 @@
                 <th scope="col">Role</th>
                 <th scope="col">Naam</th>
                 <th scope="col">Email</th>
-                <th scope="col">Delete</th>
                 <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
             </tr>
             </thead>
             <tbody>
             {% for user in users %}
                 <tr>
-                    {% if user.roles[0] == "ROLE_ADMIN" %}
-                        <td><span class="badge badge-pill badge-danger">{{ user.roles[0] }}</span></td>
-                    {% elseif user.roles[0] == "ROLE_INST" %}
-                        <td><span class="badge badge-pill badge-warning">{{ user.roles[0] }}</span></td>
+                    {% if user.roles[0] == "ROLE_INST" %}
+                        {% if user.roles[1] == "ROLE_ADMIN" %}
+                            <td><span class="badge badge-pill badge-danger">{{ user.roles[1] }}</span></td>
+                        {% else %}
+                            <td><span class="badge badge-pill badge-danger">{{ user.roles[0] }}</span></td>
+                        {% endif %}
                     {% else %}
                         <td><span class="badge badge-pill badge-success">{{ user.roles[0] }}</span></td>
                     {% endif %}
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
-                    <td><a class="btn btn-danger" href="{{ path('removeUser', {'id': user.id }) }}">delete</a></td>
-                    <td><a class="btn btn-warning" href="#">edit</a></td>
+                    <td><a class="btn btn-warning" href="#">
+                            <i class="fas fa-edit"></i>&nbsp;&nbsp;
+                            Edit
+                        </a></td>
+                    <td><a class="btn btn-danger" href="{{ path('removeUser', {'id': user.id }) }}">
+                            <i class="fas fa-trash"></i>&nbsp;&nbsp;
+                            Delete
+                        </a></td>
+
                 </tr>
             {% endfor %}
             </tbody>

@@ -18,8 +18,14 @@
             <hr class="my-4">
             <p>{{ nieuwsItem.description | raw}}</p>
             {% if app.user %}
-                <a href="{{ path('editNieuwsItem', {'id': nieuwsItem.id}) }}" class="btn btn-warning text-light">Edit</a>
-                <a href="{{ path('deleteNieuwsItem', {'id': nieuwsItem.id}) }}" class="btn btn-danger text-light">Delete</a>
+                <a href="{{ path('editNieuwsItem', {'id': nieuwsItem.id}) }}" class="btn btn-warning text-light">
+                    <i class="fas fa-edit"></i>&nbsp;&nbsp;
+                    Edit
+                </a>
+                <a href="{{ path('deleteNieuwsItem', {'id': nieuwsItem.id}) }}" class="btn btn-danger text-light">
+                    <i class="fas fa-trash"></i>&nbsp;&nbsp;
+                    Delete
+                </a>
             {% endif %}
         </div>
     {% endif %}

@@ -13,7 +13,10 @@
             {% for item in files %}
                 <tr>
                     <th scope="row">{{ item }}</th>
-                    <td><a class="btn btn-danger" href="{{ path('removeFile', {'id': pageId, 'name': item}) }}">delete</a></td>
+                    <td><a class="btn btn-danger" href="{{ path('removeFile', {'id': pageId, 'name': item}) }}">
+                            <i class="fas fa-trash"></i>&nbsp;&nbsp;
+                            Delete
+                        </a></td>
                 </tr>
             {% endfor %}
             </tbody>

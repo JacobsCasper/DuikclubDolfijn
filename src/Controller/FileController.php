@@ -70,6 +70,8 @@ class FileController extends AbstractController
     }
 
 
+
+
     private function getFileForm($buttonName, $buttonType='primary'){
         return $this->createFormBuilder()
             ->add('name', TextType::class,
@@ -88,6 +90,7 @@ class FileController extends AbstractController
             ))
             ->getForm();
     }
+
 
     private function getGlobalVars(){
         AddGlobalsService::addGlobals($this->get('twig'), publishedPageFilter::filter($this->getDoctrine()->getRepository(Page::class)->findAll()));

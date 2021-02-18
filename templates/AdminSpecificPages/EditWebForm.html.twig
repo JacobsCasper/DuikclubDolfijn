@@ -2,16 +2,30 @@
 
 {% block body %}
     <div class="text-center mb-3">
-        <a class="btn btn-primary" href="{{ path('addStringElement', {'id': currentForm.id}) }}">Text</a>
-        <a class="btn btn-primary" href="{{ path('addEmailElement', {'id': currentForm.id}) }}">Email</a>
-        <a class="btn btn-primary" href="{{ path('addIntElement', {'id': currentForm.id}) }}">Getal</a>
-        <a class="btn btn-primary" href="{{ path('addRadioElement', {'id': currentForm.id}) }}">Meerkeuze</a>
+        <a class="btn btn-primary" href="{{ path('addStringElement', {'id': currentForm.id}) }}">
+            <i class="fas fa-font"></i>&nbsp;&nbsp;
+            Text
+        </a>
+        <a class="btn btn-primary" href="{{ path('addEmailElement', {'id': currentForm.id}) }}">
+            <i class="fas fa-at"></i>&nbsp;&nbsp;
+            Email
+        </a>
+        <a class="btn btn-primary" href="{{ path('addIntElement', {'id': currentForm.id}) }}">
+            <i class="fas fa-sort-numeric-up-alt"></i>&nbsp;&nbsp;
+            Getal
+        </a>
+        <a class="btn btn-primary" href="{{ path('addRadioElement', {'id': currentForm.id}) }}">
+            <i class="fas fa-ellipsis-v"></i>&nbsp;&nbsp;
+            Meerkeuze
+        </a>
     </div>
     <div class="text-center mb-3">
         {% if currentForm.open == true %}
-            <a class="btn btn-warning" href="{{ path('closeForm', {'id': currentForm.id}) }}">Close</a>
+            <a class="btn btn-warning" href="{{ path('closeForm', {'id': currentForm.id}) }}">
+                <i class="fas fa-lock"></i>&nbsp;&nbsp;Close form</a>
         {% else %}
-            <a class="btn btn-warning" href="{{ path('openForm', {'id': currentForm.id}) }}">Open</a>
+            <a class="btn btn-warning" href="{{ path('openForm', {'id': currentForm.id}) }}">
+                <i class="fas fa-unlock"></i>&nbsp;&nbsp;Open form</a>
         {% endif %}
     </div>
     {% if formElements %}

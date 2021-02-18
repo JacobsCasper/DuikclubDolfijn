@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Services\AddGlobalsService;
 use App\Services\CalenderTypes;
 use App\Services\publishedPageFilter;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -44,7 +45,7 @@ class CalenderController extends AbstractController {
 
     /**
      * @Route("/kalender/add", name="addCalItem")
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_INST")
      */
     public function addCalItem(Request $request)
     {
@@ -76,7 +77,7 @@ class CalenderController extends AbstractController {
 
     /**
      * @Route("/kalender/edit/{id}", name="editCalItem")
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_INST")
      */
     public function editCalItem($id, Request $request, PaginatorInterface $paginator)
     {
@@ -106,7 +107,7 @@ class CalenderController extends AbstractController {
 
     /**
      * @Route("/kalender/remove/{id}", name="removeCalItem")
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_INST")
      */
     public function removeCalItem($id)
     {
@@ -141,17 +142,31 @@ class CalenderController extends AbstractController {
             ->add('description', TextareaType::class, array(
                 'required' => true,
                 'attr' => array('class' => 'form-control', 'rows' => '4'), 'label' => 'Korte uitleg'))
-            ->add('details', TextareaType::class, array(
+
+            ->add('details', CKEditorType::class, array(
+                'config' =>[
+                    'uiColor' => '#e2e2e2',
+                    'toolbar' => 'basic',
+                    'required' => true
+                ],
                 'required' => true,
+                'label' => 'Details',
                 'attr' => array('class' => 'form-control', 'rows' => '10')))
             ->add('startDate', DateTimeType::class, array(
+                'widget' => 'single_text',
                 'attr' => array('class' => 'form-control'),
                 'label' =>"Begin datum"
             ))
-            ->add('endDate', DateTimeType::class)
-/*            ->add('subscriptionEndDate', DateTimeType::class, array( TODO: throws an exception
-                'required' => false,
-                'empty_data' => null))*/
+            ->add('endDate', DateTimeType::class, array(
+                'widget' => 'single_text',
+                'attr' => array('class' => 'form-control'),
+                'label' =>"Eind datum"
+            ))
+            ->add('subscriptionEndDate', DateTimeType::class, array(
+                'widget' => 'single_text',
+                'attr' => array('class' => 'form-control'),
+                'label' =>"Sluiting inschrijvingen"
+            ))
             ->add('CalenderType', ChoiceType::class, [
                 'attr' => array('class' => 'form-control'),
                 'choices'  => [

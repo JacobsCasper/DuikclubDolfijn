@@ -1,9 +1,20 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% if is_granted('ROLE_ADMIN') %}
+
+    {% set role = 0 %}
+    {% if app.user %}
+        {% if 'ROLE_INST' in app.user.roles %}
+            {% set role = 1 %}
+        {% endif %}
+    {% endif %}
+
+    {% if role %}
         <div class="text-center mb-3">
-            <a class="btn btn-primary" href="{{ path('addCalItem') }}">Kalender item toevoegen</a>
+            <a class="btn btn-primary" href="{{ path('addCalItem') }}">
+                <i class="far fa-calendar-plus"></i>&nbsp;&nbsp;
+                Evenement toevoegen
+            </a>
         </div>
     {% endif %}
 
