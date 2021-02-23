@@ -3,7 +3,9 @@
 {% block body %}
     {% if is_granted('ROLE_ADMIN') %}
         <div class="text-center mb-3">
-            <a class="btn btn-primary" href="{{ path('addNieuws') }}">Nieuws artikel toevoegen</a>
+            <a class="btn btn-primary" href="{{ path('addNieuws') }}">
+                <i class="far fa-newspaper"></i>&nbsp;&nbsp;
+                Nieuws artikel toevoegen</a>
         </div>
     {% endif %}
     {% if nieuwsItems %}

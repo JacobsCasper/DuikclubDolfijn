@@ -2,6 +2,11 @@
 
 {% block body %}
     {% if customPageInfo is defined %}
+        {% if answered is defined %}
+            <div class="alert alert-success">
+                Uw antwoord werd succesvol opgeslagen.
+            </div>
+        {% endif %}
         <div class="card border-secondary text-white mb-2">
             {% if customPageInfo.picturePath != "" %}
                 <img class="card-img headerImage mainImage" src="{{ asset('uploads/') ~ customPageInfo.picturePath }}" alt="Card image">

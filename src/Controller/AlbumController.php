@@ -8,6 +8,7 @@ use App\Entity\Album;
 use App\Entity\Page;
 use App\Services\AddGlobalsService;
 use App\Services\publishedPageFilter;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -24,12 +25,18 @@ class AlbumController extends AbstractController
     /**
      * @Route("/fotos", name="fotos")
      */
-    public function index()
+    public function fotos(Request $request, PaginatorInterface $paginator)
     {
         $this->getGlobalVars();
 
         $albums = $this->getDoctrine()->getRepository(Album::class)->findAll();
         $albums = array_reverse($albums);
+
+        $albums = $paginator->paginate(
+            $albums,
+            $request->query->getInt('page', 1),
+            20
+        );
 
         return $this->render('defaultPages/albums.html.twig', array('albums' => $albums));
     }

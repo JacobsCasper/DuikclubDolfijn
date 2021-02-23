@@ -48,6 +48,7 @@ class AnswerController extends AbstractController
 
     /**
      * @Route("/export/{id}",  name="export")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function export($id, Request $request, PaginatorInterface $paginator)
     {
@@ -85,7 +86,7 @@ class AnswerController extends AbstractController
 
         $writer = new Xlsx($spreadsheet);
 
-        $writer->save('answers.xlsx');
+        $writer->save('exports/answers.xlsx');
         //export end
 
         $result = $paginator->paginate(
@@ -99,7 +100,28 @@ class AnswerController extends AbstractController
                 'answers' => $result,
                 'topics' => $topics,
                 'formId' => $id,
-                'exportedFile' => "answers.xlsx"
+                'exportedFile' => "exports/answers.xlsx"
+            ));
+    }
+
+    /**
+     * @Route("/remove/answers/{id}",  name="removeAllAnswers")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function removeAllAnswers($id, Request $request, PaginatorInterface $paginator)
+    {
+        $this->getGlobalVars();
+        $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(['parent_id'=> $id]);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        foreach ($answers as $answer){
+            $entityManager->remove($answer);
+        }
+        $entityManager->flush();
+
+        return $this->render('AdminSpecificPages/answers.html.twig',
+            array(
+                'formId' => $id
             ));
     }
 

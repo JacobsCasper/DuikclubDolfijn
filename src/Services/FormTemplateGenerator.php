@@ -18,15 +18,10 @@ class FormTemplateGenerator
 
         //sort by position
         $tempArray = [];
-        $i = 0;
         foreach ($elements as $item){
-            foreach ($elements as $element){
-                if($element->getPosition() == $i){
-                    array_push($tempArray, $element);
-                }
-            }
-            $i++;
+            array_push($tempArray, $item);
         }
+        usort($tempArray, fn($a, $b) => strcmp($a->getPosition(), $b->getPosition()));
         $elements = $tempArray;
 
         foreach ($elements as $element){
@@ -170,7 +165,9 @@ class FormTemplateGenerator
                     'attr' => array('class' => 'form-control'),
                     'choices'  => $choices,
                     'required' => false,
-                    'label' => $label
+                    'label' => $label,
+                    'empty_data'  => null,
+                    'empty_value' => "Geen"
                 ]);
 
         }

@@ -32,29 +32,17 @@
         <table class="table table-hover">
             <thead>
             <tr>
-                <th scope="col">Position</th>
                 <th scope="col">Label</th>
                 <th scope="col">Type</th>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <th scope="col">Delete</th>
-                {% endif %}
-                {% if is_granted('ROLE_ADMIN') %}
-                    <th scope="col">Edit</th>
-                {% endif %}
+                <th scope="col">Delete</th>
             </tr>
             </thead>
             <tbody>
             {% for element in formElements %}
                 <tr>
-                    <td>{{ element.position }}</td>
                     <td>{{ element.label }}</td>
                     <td>{{ element.type }}</td>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <td><a class="btn btn-danger" href="#">delete</a></td>
-                    {% endif %}
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <td><a class="btn btn-warning" href="#">edit</a></td>
-                    {% endif %}
+                    <td><a class="btn btn-danger" href="{{ path('removeElement', {'elId': element.id, 'id': currentForm.id, 'type': element.type}) }}">delete</a></td>
                 </tr>
             {% endfor %}
             </tbody>

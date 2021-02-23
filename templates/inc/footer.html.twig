@@ -1,37 +1,54 @@
 <!-- Footer -->
 <footer class="page-footer font-small special-color-dark pt-4">
 
-    <!-- Footer Elements -->
     <div class="container">
-
-        <!-- Social buttons -->
-        <ul class="list-unstyled list-inline text-center">
-            <li class="list-inline-item">
-                <a href="https://www.facebook.com/DuikclubDolfijn/" class="btn-floating btn-fb mx-1">
-                    <i class="fab fa-facebook-f"> </i>
+        <div class="d-flex justify-content-between align-items-center">
+            <div id="left" class="col text-left">
+                <a href="https://www.limos-vzw.be/" target="_blank">
+                    <img class="w-50" src="{{ asset('static/LimosLogo.png') }}" alt="limos"/>
                 </a>
-            </li>
-            <li class="list-inline-item">
-                <a class="btn-floating btn-li mx-1">
-                    <i class="fa fa-instagram"> </i>
+            </div>
+            <div id="middle" class="col">
+                <!-- Footer Elements -->
+                <div class="container">
+
+                    <!-- Social buttons -->
+                    <ul class="list-unstyled list-inline text-center">
+                        <li class="list-inline-item">
+                            <a href="https://www.facebook.com/DuikclubDolfijn/" class="btn-floating btn-fb mx-1">
+                                <i class="fab fa-facebook-f"> </i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a class="btn-floating btn-li mx-1">
+                                <i class="fa fa-instagram"> </i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- Social buttons -->
+
+                </div>
+                <!-- Footer Elements -->
+
+                <!-- Copyright -->
+                <div class="footer-copyright text-center py-3">© 2021 Copyright: Duikclub Dolfijn <br>
+                    <a href="{{ asset('static/Algemene voorwaarden.pdf')}}" target="_blank">algemene voorwaarden </a>-
+                    <a href="{{ asset('static/Privacy Statement.pdf')}}" target="_blank"> privacy verklaring </a><br>
+                    {% if app.user %}
+                        <a href="{{ path('logout') }}"> logout</a>
+                    {% else %}
+                        <a href="{{ path('login') }}"> login</a>
+                    {% endif %}
+                </div>
+                <!-- Copyright -->
+            </div>
+            <div id="right" class="col text-right">
+                <a href="https://www.nelos.be/landing/main" target="_blank">
+                    <img class="w-50" src="{{ asset('static/nelos.png') }}" alt="nelos"/>
                 </a>
-            </li>
-        </ul>
-        <!-- Social buttons -->
-
+            </div>
+        </div>
     </div>
-    <!-- Footer Elements -->
-
-    <!-- Copyright -->
-    <div class="footer-copyright text-center py-3">© 2021 Copyright: Duikclub Dolfijn <br>
-        <a href="#">privacy verklaring </a>-
-        {% if app.user %}
-            <a href="{{ path('logout') }}"> logout</a>
-        {% else %}
-            <a href="{{ path('login') }}"> login</a>
-        {% endif %}
-    </div>
-    <!-- Copyright -->
 
 </footer>
 <!-- Footer -->

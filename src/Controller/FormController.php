@@ -282,6 +282,44 @@ class FormController extends AbstractController
     }
 
     /**
+     * @Route("/form/removeEl/{id}/{elId}/{type}", name="removeElement")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function removeElement($id, $elId, $type){
+        $this->getGlobalVars();
+        $webForm = $this->getDoctrine()->getRepository(WebForm::class)->find($id);
+        switch ($type){
+            case "string":
+                $element = $this->getDoctrine()->getRepository(WebFormStringType::class)->find($elId);
+                break;
+            case "int":
+                $element = $this->getDoctrine()->getRepository(WebFormIntType::class)->find($elId);
+                break;
+            case "email":
+                $element = $this->getDoctrine()->getRepository(WebFormEmailType::class)->find($elId);
+                break;
+            case "radio":
+                $element = $this->getDoctrine()->getRepository(WebFormRadioType::class)->find($elId);
+                break;
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($element);
+        $entityManager->flush();
+
+        $formElements = $this->getElements($webForm);
+        $formTemplate = $this->formTemplateGenerator->getForm($formElements, $this->createFormBuilder())->getForm();
+
+        return $this->render('AdminSpecificPages/EditWebForm.html.twig'
+            , array(
+                'formElements' => $formElements,
+                'currentForm' => $webForm,
+                'form' => $formTemplate->createView(),
+                'formTitle' => $webForm->getTitle()
+            ));
+    }
+
+    /**
      * @Route("/addform", name="addForm")
      * @IsGranted("ROLE_ADMIN")
      */
@@ -400,6 +438,14 @@ class FormController extends AbstractController
         $elements = $this->addWebFormElementsToArray($elements, $this->getDoctrine()->getRepository(WebFormRadioType::class)->findBy($criteria));
         $elements = $this->addWebFormElementsToArray($elements, $this->getDoctrine()->getRepository(WebFormEmailType::class)->findBy($criteria));
         $elements = $this->addWebFormElementsToArray($elements, $this->getDoctrine()->getRepository(WebFormIntType::class)->findBy($criteria));
+
+        $tempArray = [];
+        foreach ($elements as $item){
+            array_push($tempArray, $item);
+        }
+        usort($tempArray, fn($a, $b) => strcmp($a->getPosition(), $b->getPosition()));
+        $elements = $tempArray;
+
         return $elements;
     }
 

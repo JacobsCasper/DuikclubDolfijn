@@ -10,6 +10,13 @@
     {% if kalenderItem %}
 
         <div class="jumbotron">
+            {% if app.user %}
+                {% if app.user in users %}
+                    <div class="alert alert-info centered">
+                        U bent ingeschreven voor dit evenement.
+                    </div>
+                {% endif %}
+            {% endif %}
             <h1 class="display-3">{{ kalenderItem.title }}</h1>
             <p class="lead">{{ kalenderItem.description }}</p>
             <hr class="my-4">
@@ -19,11 +26,11 @@
             {% if app.user %}
                 {% if app.user in users %}
                 {% else %}
-                    {% if kalenderItem.subscriptionDateExpired %}
+                    {% if kalenderItem.subscriptionDateExpired or true%}
                         <div class="alert alert-danger">
                             <strong>Oeps!</strong> Het ziet er naar uit dat de inschrijvingen voor dit evenement gesloten zijn.
                         </div>
-                    {% elseif kalenderItem.maxSubscriptionsReached%}
+                    {% elseif kalenderItem.maxSubscriptionsReached %}
                         <div class="alert alert-danger">
                             <strong>Oeps!</strong> Het ziet er naar uit dat de inschrijvingen voor dit evenement vol zitten.
                         </div>
@@ -48,6 +55,7 @@
         </div>
         <div>
             {% if app.user %}
+                {% if users[0] is defined%}
                     <h1 class="text-center m-5">
                         Inschrijvingen
                     </h1>
@@ -79,6 +87,11 @@
                     <div style="display: flex; justify-content: center; align-items: center;">
                         {{ knp_pagination_render(users) }}
                     </div>
+                {% else %}
+                    <div class="d-flex justify-content-center w-100">
+                        <h5>Er zijn nog geen inschrijvingen.</h5>
+                    </div>
+                {% endif %}
             {% endif %}
         </div>
     {% endif %}

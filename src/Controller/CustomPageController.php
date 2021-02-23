@@ -191,7 +191,8 @@ class CustomPageController extends AbstractController
                         , array(
                             'customPageInfo' => $page,
                             'form' => $formTemplate->createView(),
-                            'formTitle' => $webForm->getTitle()
+                            'formTitle' => $webForm->getTitle(),
+                            'answered' => true
                         ));
                 }
 

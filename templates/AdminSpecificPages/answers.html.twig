@@ -3,12 +3,14 @@
 {% block body %}
 
     {% if answers is defined and topics is defined %}
-        <div class="text-center mb-3">
-            <a class="btn btn-primary" href="{{ path('export', {'id': formId}) }}">
-                <i class="fas fa-file-export"></i>&nbsp;&nbsp;
-                Exporteren
-            </a>
-        </div>
+        {% if topics != [] %}
+            <div class="text-center mb-3">
+                <a class="btn btn-primary" href="{{ path('export', {'id': formId}) }}">
+                    <i class="fas fa-file-export"></i>&nbsp;&nbsp;
+                    Exporteren
+                </a>
+            </div>
+        {% endif %}
 
         {% if exportedFile is defined %}
             <div>
@@ -45,8 +47,21 @@
         <div style="display: flex; justify-content: center; align-items: center;">
             {{ knp_pagination_render(answers) }}
         </div>
-    {% endif %}
-    {% if topics == [] %}
+        {% if topics != [] %}
+            <div class="text-center mb-3">
+                <a class="btn btn-danger" onclick="removeRouteGuard()" href="#">
+                    <i class="fas fa-eraser"></i>&nbsp;&nbsp;
+                    Remove all answers
+                </a>
+            </div>
+        {% endif %}
+
+        {% if topics == [] %}
+            <div class="d-flex justify-content-center w-100">
+                <h5>Er zijn nog geen antwoorden ingediend!</h5>
+            </div>
+        {% endif %}
+    {% else %}
         <div class="d-flex justify-content-center w-100">
             <h5>Er zijn nog geen antwoorden ingediend!</h5>
         </div>
@@ -55,5 +70,14 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script>
+        function removeRouteGuard(){
+            var route = "{{ path('removeAllAnswers', {'id': formId})|escape('js') }}";
+            var con = confirm("Are you sure you remove all answers? \nThis cannot be undone!");
+            if(con){
+                window.location.href = route.toString();
+            }
+        }
+    </script>
 
 {% endblock %}
