@@ -100,7 +100,7 @@ class AnswerController extends AbstractController
                 'answers' => $result,
                 'topics' => $topics,
                 'formId' => $id,
-                'exportedFile' => "exports/answers.xlsx"
+                'exportedFile' => "answers.xlsx"
             ));
     }
 

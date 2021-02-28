@@ -26,7 +26,7 @@
             {% if app.user %}
                 {% if app.user in users %}
                 {% else %}
-                    {% if kalenderItem.subscriptionDateExpired or true%}
+                    {% if kalenderItem.subscriptionDateExpired%}
                         <div class="alert alert-danger">
                             <strong>Oeps!</strong> Het ziet er naar uit dat de inschrijvingen voor dit evenement gesloten zijn.
                         </div>
