@@ -81,6 +81,6 @@
             "require": "5.1.*"
         }
     },
-    "name": "duikclubdolfijn",
-    "description": "duikclubdolfijn"
+    "description": "website created for duikclubdolfijn",
+    "name": "vendor_name/duikclubdolfijn"
 }
