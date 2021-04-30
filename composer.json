@@ -1,6 +1,4 @@
 {
-    "name": "duikclubDolfijn",
-    "description": "web app for duikclub dolfijn",
     "type": "project",
     "license": "proprietary",
     "require": {
@@ -8,6 +6,7 @@
         "ext-ctype": "*",
         "ext-fileinfo": "*",
         "ext-iconv": "*",
+        "doctrine/doctrine-fixtures-bundle": "^3.3",
         "friendsofsymfony/ckeditor-bundle": "^2.3",
         "knplabs/knp-paginator-bundle": "^5.2",
         "phpoffice/phpspreadsheet": "^1.16",
@@ -22,13 +21,13 @@
         "symfony/maker-bundle": "^1.19",
         "symfony/mime": "5.1.*",
         "symfony/orm-pack": "^1.0",
+        "symfony/phpunit-bridge": "^5.1",
+        "symfony/profiler-pack": "^1.0",
         "symfony/security-bundle": "5.1.*",
         "symfony/twig-pack": "^1.0",
         "symfony/validator": "5.1.*",
-        "symfony/yaml": "5.1.*",
-        "doctrine/doctrine-fixtures-bundle": "^3.3",
-        "symfony/phpunit-bridge": "^5.1",
-        "symfony/profiler-pack": "^1.0"
+        "symfony/web-profiler-bundle": "5.1.*",
+        "symfony/yaml": "5.1.*"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",
