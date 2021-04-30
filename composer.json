@@ -25,7 +25,6 @@
         "symfony/validator": "5.1.*",
         "symfony/web-profiler-bundle": "5.1.*",
         "symfony/yaml": "5.1.*",
-        "doctrine/doctrine-fixtures-bundle": "^3.3",
         "symfony/phpunit-bridge": "^5.1",
         "symfony/profiler-pack": "^1.0"
     },
