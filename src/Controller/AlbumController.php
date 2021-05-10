@@ -42,6 +42,26 @@ class AlbumController extends AbstractController
     }
 
     /**
+     * @Route("/all/albums", name="getAllAlbums")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function albums(Request $request, PaginatorInterface $paginator)
+    {
+        $this->getGlobalVars();
+
+        $albums = $this->getDoctrine()->getRepository(Album::class)->findAll();
+        $albums = array_reverse($albums);
+
+        $albums = $paginator->paginate(
+            $albums,
+            $request->query->getInt('page', 1),
+            20
+        );
+
+        return $this->render('AdminSpecificPages/albums.html.twig', array('albums' => $albums));
+    }
+
+    /**
      * @Route("/album/add", name="addAlbum")
      * @IsGranted("ROLE_ADMIN")
      */
@@ -77,6 +97,21 @@ class AlbumController extends AbstractController
         ));
     }
 
+    /**
+     * @Route("/album/remove/{id}", name="removeAlbum")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function removeAlbum($id)
+    {
+        $album = $this->getDoctrine()->getRepository(Album::class)->find($id);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($album);
+        $entityManager->flush();
+
+        return $this->redirectToRoute("getAllAlbums");
+    }
+
 
     private function getAlbumForm($album, $buttonName, $buttonType='primary'){
         return $this->createFormBuilder($album)
@@ -89,7 +124,7 @@ class AlbumController extends AbstractController
             ->add('picture', FileType::class, array(
                 'mapped' => false,
                 'label' => "Afbeelding",
-                'required' => false))
+                'required' => true))
             ->add('date', DateType::class, array(
                 'widget' => 'single_text',
                 'attr' => array('class' => 'form-control'),

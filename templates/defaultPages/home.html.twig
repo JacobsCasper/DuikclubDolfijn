@@ -115,7 +115,7 @@
                                         Tijdens deze clubduiken kunnen duikers in opleiding de nodige ervaring opdoen en eventuele proeven afleggen.
                                     </div>
                                     <p class="lead">
-                                        <a href="#" class="card-link">Lees meer</a>
+                                        <a href="{{ path('kalender') }}" class="card-link">Lees meer</a>
                                     </p>
                                 </div>
                     </div>
@@ -133,7 +133,7 @@
                                     </p>
                                 </div>
                                 <p class="lead">
-                                    <a href="#" class="card-link">Lees meer</a>
+                                    <a href="{{ path('leerDuiken') }}" class="card-link">Lees meer</a>
                                 </p>
                             </div>
                         </div>
@@ -149,30 +149,7 @@
                             <hr class="my-4">
                             <div class="card-text mb-0 w-100">
                                 Zwembadtrainingen gaan door in het zwembad 'De Kimpel’ op dinsdag van 21.45 tot 22.45. Van begin juli t.e.m. mid-september wordt er niet getraind maar telkens een buitenduik gedaan.
-
-                                	be/training
-
-                                Indien je lessen volgt en je kan door omstandigheden niet aanwezig zijn, gelieve dan even een seintje te geven aan de trainer.
-                                Na de training is er steeds ruimte voor een gezellige babbel in de cafetaria.
-
-                                Praktijklessen
-                                Denk er aan:
-                                - het water wordt pas betreden na instemming van de redder;
-                                - laat geen waardevolle spullen achter in de kleedkamers;
-                                - training met duikflessen gebeurt steeds onder toezicht van een trainer;
-                                - apneus worden minstens per twee uitgevoerd;
-
-                                Theorielessen
-                                De theorielessen vinden plaats in de daartoe ingerichte theorielokalen.
-
-                                De lessenroosters en schema's worden door de verantwoordelijke van de opleiding bezorgd aan de kandidaten.
-
-                                Meestal worden de theorielessen voor de zwembadtraining gegeven, maar in samenspraak tussen opleiders en kandidaten kan daar van afgeweken worden.
-
                             </div>
-                            <p class="lead">
-                                <a href="#" class="card-link">Lees meer</a>
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -181,7 +158,11 @@
                 <div class="row justify-content-md-center">
                     {% for page in homePageEnabledPages %}
                         <div class="col-lg-6 p-2">
-                            <div class="button-content border rounded albumCover" style="background-image: url({{ asset('uploads/') ~ page.picturePath }});">
+                            {% if page.picturePath != "" and page.picturePath != null%}
+                                <div class="button-content border rounded albumCover" style="background-image: url({{ asset('uploads/') ~ page.picturePath }});">
+                            {% else %}
+                                <div class="button-content border rounded albumCover" style="background-image: url({{asset('gallery/pexels-pawel-kalisinski-1076758.jpg')}});">
+                            {% endif %}
                                 <table class="button-table w-100">
                                     <tbody>
                                     <tr>

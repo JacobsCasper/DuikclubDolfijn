@@ -14,6 +14,7 @@
                 <th scope="col">Role</th>
                 <th scope="col">Naam</th>
                 <th scope="col">Email</th>
+                <th scope="col">Password</th>
                 <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
             </tr>
@@ -32,7 +33,11 @@
                     {% endif %}
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
-                    <td><a class="btn btn-warning" href="#">
+                    <td><a class="btn btn-info" href="{{ path('editUserPw', {'id': user.id}) }}">
+                            <i class="fas fa-edit"></i>&nbsp;&nbsp;
+                            Edit password
+                        </a></td>
+                    <td><a class="btn btn-warning" href="{{ path('editUser', {'id': user.id}) }}">
                             <i class="fas fa-edit"></i>&nbsp;&nbsp;
                             Edit
                         </a></td>

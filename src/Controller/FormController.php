@@ -64,6 +64,22 @@ class FormController extends AbstractController
     }
 
     /**
+     * @Route("/form/remove/{id}", name="removeForm")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function removeForm($id){
+        $webForm = $this->getDoctrine()->getRepository(WebForm::class)->find($id);
+        $entityManager = $this->getDoctrine()->getManager();
+        foreach ($formElements = $this->getElements($webForm) as $element) {
+            $entityManager->remove($element);
+        }
+        $entityManager->flush();
+        $entityManager->remove($webForm);
+        $entityManager->flush();
+        return $this->redirectToRoute('forms');
+    }
+
+    /**
      * @Route("/form/edit/{id}", name="editForm")
      * @IsGranted("ROLE_ADMIN")
      */
@@ -86,25 +102,25 @@ class FormController extends AbstractController
      * @Route("/form/open/{id}", name="openForm")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function openForm($id){
+    public function openForm($id, Request $request, PaginatorInterface $paginator){
         $webForm = $this->getDoctrine()->getRepository(WebForm::class)->find($id);
         $webForm->setOpen(true);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($webForm);
         $entityManager->flush();
-        return $this->redirectToRoute("editForm", ['id' => $id]);
+        return $this->getForms($request, $paginator);
     }
     /**
      * @Route("/form/close/{id}", name="closeForm")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function closeForm($id){
+    public function closeForm($id, Request $request, PaginatorInterface $paginator){
         $webForm = $this->getDoctrine()->getRepository(WebForm::class)->find($id);
         $webForm->setOpen(false);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($webForm);
         $entityManager->flush();
-        return $this->redirectToRoute("editForm", ['id' => $id]);
+        return $this->getForms($request, $paginator);
     }
 
     /**

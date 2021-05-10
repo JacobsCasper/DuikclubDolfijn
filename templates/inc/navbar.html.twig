@@ -38,9 +38,7 @@
                         <a class="dropdown-item" href="/leerduiken">Leren duiken</a>
                         <a class="dropdown-item" href="#">Regelement</a>
                         <a class="dropdown-item" href="#">Bestuur</a>
-                        <a class="dropdown-item" href="#">Breveten</a>
-                        <a class="dropdown-item" href="#">FAQ</a>
-                        <a class="dropdown-item" href="#">Contact</a>
+                        <a class="dropdown-item" target="_blank" href="https://www.nelos.be/programma/Sportduiken">Breveten</a>
                     </div>
                 </li>
                 {% if is_granted('ROLE_ADMIN') %}
@@ -51,6 +49,7 @@
                             <a class="dropdown-item" href="{{ path('addCalItem') }}">Kalender item toevoegen</a>
                             <a class="dropdown-item" href="{{ path('addNieuws') }}">Nieuws item toegoegen</a>
                             <a class="dropdown-item" href="{{ path('getAllPages') }}">Paginas beheren</a>
+                            <a class="dropdown-item" href="{{ path('getAllAlbums') }}">albums beheren</a>
                             <div class="dropdown-divider"></div>
 
                             <a class="dropdown-item" href="{{ path('forms') }}">Forms beheren</a>

@@ -7,16 +7,18 @@
                 Uw antwoord werd succesvol opgeslagen.
             </div>
         {% endif %}
-        <div class="card border-secondary text-white mb-2">
-            {% if customPageInfo.picturePath != "" %}
-                <img class="card-img headerImage mainImage" src="{{ asset('uploads/') ~ customPageInfo.picturePath }}" alt="Card image">
-            {% else %}
-
-            {% endif %}
-            <div class="card-img-overlay">
-                <h1 class="card-title centered headerTitle">{{ customPageInfo.title }}</h1>
+        {% if customPageInfo.picturePath != "" and customPageInfo.picturePath != null %}
+            <div class="card border-secondary text-white mb-2">
+                    <img class="card-img headerImage mainImage" src="{{ asset('uploads/') ~ customPageInfo.picturePath }}" alt="Card image">
+                <div class="card-img-overlay">
+                    <h1 class="card-title centered headerTitle">{{ customPageInfo.title }}</h1>
+                </div>
             </div>
-        </div>
+        {% else %}
+            <div class="d-flex justify-content-center w-100">
+                <h1 >{{ customPageInfo.title }}</h1>
+            </div>
+        {% endif %}
         <div class="jumbotron container">
             <p class="card-text">{{ customPageInfo.body | raw }}</p>
             <p class="card-text">{{ customPageInfo.submitDate }} door {{ customPageInfo.author }}</p>

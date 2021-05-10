@@ -35,7 +35,7 @@ class SubscriptionController extends AbstractController
 
     /**
      * @Route("/remove/{calId}/{userId}", name="removeSub")
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_INST")
      */
     public function removeSub($calId, $userId)
     {

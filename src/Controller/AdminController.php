@@ -72,6 +72,8 @@ class AdminController extends AbstractController
                 $user->makeAdmin();
             } else if($admin == 1) {
                 $user->makeInstructor();
+            } else {
+                $user->makeUser();
             }
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -87,10 +89,73 @@ class AdminController extends AbstractController
     }
 
     /**
+     * @Route("/user/edit/{id}", name="editUser")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function editUser($id, Request $request, PaginatorInterface $paginator)
+    {
+        $this->getGlobalVars();
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $form = $this->getEditUserForm($user, 'save');
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $admin = $form->get('UserRole')->getData();
+
+            $user = $form->getData();
+            if($admin == 2){
+                $user->makeAdmin();
+            } else if($admin == 1) {
+                $user->makeInstructor();
+            } else {
+                $user->makeUser();
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
+
+            return $this->redirectToRoute('getUsers', ['request'=>$request, 'paginator'=>$paginator]);
+        }
+        return $this->render('forms/defaultForms.html.twig', array(
+            'header' => 'Gebruiker aanpassen',
+            'form' => $form->createView()
+        ));
+    }
+
+    /**
+     * @Route("/user/editpw/{id}", name="editUserPw")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function editUserPassword($id, Request $request, PaginatorInterface $paginator)
+    {
+        $this->getGlobalVars();
+        $form = $this->getPasswordForm('save');
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+
+            $password = $form->get('password')->getData();
+            $user->setPassword(
+                $this->encoder->encodePassword($user, $password)
+            );
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
+
+            return $this->redirectToRoute('home', ['request'=>$request, 'paginator'=>$paginator]);
+        }
+        return $this->render('forms/defaultForms.html.twig', array(
+            'header' => 'Wachtwoord aanpassen',
+            'form' => $form->createView()
+        ));
+    }
+
+    /**
      * @Route("/user/remove/{id}", name="removeUser")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function removeUser(Request $request, $id)
+    public function removeUser($id)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
 
@@ -108,7 +173,7 @@ class AdminController extends AbstractController
                 array('attr' => array('class' => 'form-control'), 'label' => 'Username'))
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'Bijde paswoorden moeten hetzelfde zijn.',
+                'invalid_message' => 'Beide paswoorden moeten hetzelfde zijn.',
                 'options' => ['attr' => ['class' => 'password-field form-control']],
                 'required' => true,
                 'first_options'  => ['label' => 'Password'],
@@ -127,6 +192,50 @@ class AdminController extends AbstractController
                     'Administrator' => 2,
                 ],
                 'data' => 0
+            ])
+            ->add('save', SubmitType::class, array(
+                'label' => $buttonName,
+                'attr' => array('class' => 'btn btn-' . $buttonType . ' mt-3')
+            ))
+            ->getForm();
+
+    }
+
+    private function getEditUserForm($user, $buttonName, $buttonType = "primary"){
+        return $this->createFormBuilder($user)
+            ->add('username', TextType::class,
+                array('attr' => array('class' => 'form-control'), 'label' => 'Username'))
+            ->add('email', EmailType::class,
+                array('attr' => array('class' => 'form-control'), 'label' => 'email'))
+            ->add('UserRole', ChoiceType::class, [
+                'mapped' => false,
+                'label' => 'Welke rol krijgt deze user',
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+                'choices'  => [
+                    'User' => 0,
+                    'Instructeur' => 1,
+                    'Administrator' => 2,
+                ],
+                'data' => 0
+            ])
+            ->add('save', SubmitType::class, array(
+                'label' => $buttonName,
+                'attr' => array('class' => 'btn btn-' . $buttonType . ' mt-3')
+            ))
+            ->getForm();
+
+    }
+
+    private function getPasswordForm($buttonName, $buttonType = "primary"){
+        return $this->createFormBuilder()
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'Beide paswoorden moeten hetzelfde zijn.',
+                'options' => ['attr' => ['class' => 'password-field form-control']],
+                'required' => true,
+                'first_options'  => ['label' => 'Password'],
+                'second_options' => ['label' => 'Repeat Password'],
             ])
             ->add('save', SubmitType::class, array(
                 'label' => $buttonName,

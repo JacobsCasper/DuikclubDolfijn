@@ -18,6 +18,15 @@
                 {% endif %}
             {% endif %}
             <h1 class="display-3">{{ kalenderItem.title }}</h1>
+
+            <div>
+                {% if kalenderItem.startDate|date("m/d/Y") == kalenderItem.endDate|date("m/d/Y") %}
+                    <p class="lead">{{ kalenderItem.startDate|format_datetime('full', 'none', locale='nl') }} van {{ kalenderItem.startDate|format_datetime(pattern="HH:mm") }} tot {{ kalenderItem.endDate|format_datetime(pattern="HH:mm") }}</p>
+                {% else %}
+                    <p class="lead">van {{ kalenderItem.startDate|date("m/d/Y") }} om {{ kalenderItem.startDate|format_datetime(pattern="HH:mm") }} tot {{ kalenderItem.endDate|date("m/d/Y") }} om {{ kalenderItem.endDate|format_datetime(pattern="HH:mm") }}</p>
+                {% endif %}
+            </div>
+
             <p class="lead">{{ kalenderItem.description }}</p>
             <hr class="my-4">
             <p>{{ kalenderItem.details | raw }}</p>
