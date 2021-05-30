@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% if calenderItems %}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Type</th>
+                <th scope="col">Datum</th>
+                <th scope="col">Titel</th>
+                <th scope="col">Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in calenderItems %}
+                <tr>
+                    <td>
+                    {% if item.CalenderType==0 %}
+                        <span class="badge badge-pill badge-primary">Duiken</span>
+                    {% elseif item.CalenderType==1 %}
+                        <span class="badge badge-pill badge-success">Lessen/trainingen</span>
+                    {% elseif item.CalenderType==2 %}
+                        <span class="badge badge-pill badge-danger">Activiteiten</span>
+                    {% else %}
+                    {% endif %}
+                    </td>
+                    <td>
+                        {% if item.startDate|date("m/d/Y") == item.endDate|date("m/d/Y") %}
+                            <p class="card-title">{{ item.startDate|format_datetime('full', 'none', locale='nl') }}</p>
+                            <p class="card-title">van {{ item.startDate|date("g:i") }} tot {{ item.endDate|date("g:i") }}</p>
+                        {% else %}
+                            <p class="card-title">{{ item.startDate|date("m/d/Y") }} - {{ item.endDate|date("m/d/Y") }}</p>
+                        {% endif %}
+                    </td>
+                    <td>{{ item.title }}</td>
+                    <td><a class="btn btn-info" href="{{ path('calItem', {'id': item.id}) }}">
+                            <i class="fas fa-info"></i>&nbsp;&nbsp;
+                            Info
+                        </a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    <div style="display: flex; justify-content: center; align-items: center;">
+        {{ knp_pagination_render(calenderItems) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

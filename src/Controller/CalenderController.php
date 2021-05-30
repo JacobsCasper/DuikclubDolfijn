@@ -44,6 +44,23 @@ class CalenderController extends AbstractController {
     }
 
     /**
+     * @Route("/easyKalender", name="easyKalender")
+     */
+    public function easyKalender(Request $request, PaginatorInterface $paginator)
+    {
+        $this->getGlobalVars();
+        $calenderItems = $this->getDoctrine()->getRepository(CalenderItem::class)->findAll();
+        $query = array_reverse($calenderItems);
+
+        $results = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            30
+        );
+        return $this->render('defaultPages/easyKalender.html.twig', array('calenderItems' => $results));
+    }
+
+    /**
      * @Route("/kalender/add", name="addCalItem")
      * @IsGranted("ROLE_INST")
      */

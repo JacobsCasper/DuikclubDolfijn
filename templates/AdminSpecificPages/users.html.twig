@@ -22,14 +22,14 @@
             <tbody>
             {% for user in users %}
                 <tr>
-                    {% if user.roles[0] == "ROLE_INST" %}
-                        {% if user.roles[1] == "ROLE_ADMIN" %}
-                            <td><span class="badge badge-pill badge-danger">{{ user.roles[1] }}</span></td>
+                    {% if  1 in user.roles|keys %}
+                        {% if 2 in user.roles|keys %}
+                            <td><span class="badge badge-pill badge-danger">ADMIN</span></td>
                         {% else %}
-                            <td><span class="badge badge-pill badge-warning">{{ user.roles[0] }}</span></td>
+                            <td><span class="badge badge-pill badge-warning">INSTR</span></td>
                         {% endif %}
                     {% else %}
-                        <td><span class="badge badge-pill badge-success">{{ user.roles[0] }}</span></td>
+                        <td><span class="badge badge-pill badge-success">USER</span></td>
                     {% endif %}
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>

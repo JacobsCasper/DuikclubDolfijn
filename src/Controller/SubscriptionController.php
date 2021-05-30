@@ -15,12 +15,21 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SubscriptionController extends AbstractController
 {
+    private CalenderController $calenderController;
     //remove user (admin)
+    /**
+     * SubscriptionController constructor.
+     */
+    public function __construct(CalenderController $calenderController)
+    {
+        $this->calenderController = $calenderController;
+    }
+
 
     /**
      * @Route("/sub/{calId}/{userId}", name="subUser")
      */
-    public function subUser($calId, $userId)
+    public function subUser($calId, $userId, Request $request, PaginatorInterface $paginator)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
         $cal = $this->getDoctrine()->getRepository(CalenderItem::class)->find($calId);
@@ -30,14 +39,14 @@ class SubscriptionController extends AbstractController
         $entityManager->persist($cal);
         $entityManager->flush();
 
-        return $this->redirectToRoute('kalender');
+        return $this->calenderController->calItem($calId, $request, $paginator);
     }
 
     /**
      * @Route("/remove/{calId}/{userId}", name="removeSub")
      * @IsGranted("ROLE_INST")
      */
-    public function removeSub($calId, $userId)
+    public function removeSub($calId, $userId, Request $request, PaginatorInterface $paginator)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
         $cal = $this->getDoctrine()->getRepository(CalenderItem::class)->find($calId);
@@ -47,7 +56,7 @@ class SubscriptionController extends AbstractController
         $entityManager->persist($cal);
         $entityManager->flush();
 
-        return $this->redirectToRoute('kalender');
+        return $this->calenderController->calItem($calId, $request, $paginator);
     }
 
 }
