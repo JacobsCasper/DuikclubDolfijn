@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% if bestuur is defined %}
+        <div class="row">
+            {% for lid in bestuur %}
+            <div class="col-4 h-25">
+                <div class="card" style="width: 18rem;">
+                    {% if lid.profilePicturePath != "" or lid.profilePicturePath is null %}
+                        <img src="{{ asset('userPictures/') ~ lid.profilePicturePath }}" class="card-img-top" alt="a">
+                    {% else %}
+                        <img src="{{ asset('userPictures/default.png')}}" class="card-img-top" alt="b">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ lid.username }}</h5>
+
+                        <p class="card-text">
+                            {% if lid.description %}
+                                {{ lid.description }}<br>
+                            {% endif %}
+                            {% if lid.email %}
+                                <a href="mailto:{{ lid.email }}">  <span class="badge badge-warning" style="margin-top: 5px"> <i class="fas fa-paper-plane"></i>&nbsp;&nbsp; {{ lid.email }} </span></a><br>
+                            {% endif %}
+                            {% if lid.phoneNumber %}
+                                <a href="tel:{{ lid.phoneNumber }}"><span class="badge badge-danger"  style="margin-top: 5px"><i class="fas fa-phone-alt"></i>&nbsp;&nbsp; {{ lid.phoneNumber }} </span></a>
+                                <a href="https://wa.me/{{ lid.phoneNumber }}" target="_blank"><span class="badge badge-success"  style="margin-top: 5px"><i class="fab fa-whatsapp"></i>&nbsp;&nbsp; {{ lid.phoneNumber }} </span></a><br>
+                            {% endif %}
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <div style="display: flex; justify-content: center; align-items: center;">
+                {{ knp_pagination_render(bestuur) }}
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

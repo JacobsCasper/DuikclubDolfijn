@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Services\FileService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinTable;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -38,6 +40,16 @@ class User implements UserInterface, \Serializable
     private $email;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $phoneNumber;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $description;
+
+    /**
      * Many Users have Many CalenderItem.
      * @ManyToMany(targetEntity="CalenderItem", mappedBy="users")
      */
@@ -47,6 +59,17 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="json")
      */
     private $roles = [];
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isBestuursLid;
+
+    /**
+     * @ORM\Column(type="text", length=255)
+     */
+    private $profilePicturePath;
+
 
     public function __construct()
     {
@@ -81,6 +104,40 @@ class User implements UserInterface, \Serializable
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
+     * @param mixed $phoneNumber
+     */
+    public function setPhoneNumber($phoneNumber): void
+    {
+        $this->phoneNumber = $phoneNumber;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description): void
+    {
+        $this->description = $description;
+    }
+
+
 
     public function getEmail(): ?string
     {
@@ -120,6 +177,42 @@ class User implements UserInterface, \Serializable
 
         return array_unique($roles);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getProfilePicturePath()
+    {
+        return $this->profilePicturePath;
+    }
+
+    /**
+     * @param mixed $profilePicturePath
+     */
+    public function setProfilePicturePath($profilePicturePath): void
+    {
+        $this->profilePicturePath = $profilePicturePath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsBestuursLid()
+    {
+        return $this->isBestuursLid;
+    }
+
+    /**
+     * @param mixed $isBestuursLid
+     */
+    public function setIsBestuursLid($isBestuursLid): void
+    {
+        $this->isBestuursLid = $isBestuursLid;
+    }
+
+
+
+
 
     public function makeUser()
     {
@@ -176,5 +269,18 @@ class User implements UserInterface, \Serializable
             return true;
         }
         return false;
+    }
+
+    public function setPicture(SluggerInterface $slugger, $picture, string $uploadDir)
+    {
+        $fileService = new FileService();
+        $newFilename = $fileService->uploadFile($picture, $slugger, $uploadDir);
+        $this->setProfilePicturePath($newFilename);
+    }
+
+    public function removePicture(string $uploadDir)
+    {
+        unlink($uploadDir . "/" . $this->getProfilePicturePath());
+        $this->setProfilePicturePath("");
     }
 }

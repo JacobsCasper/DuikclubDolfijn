@@ -42,6 +42,7 @@ body{
 
 .albumCover{
     min-height: 200px;
+    background-size: cover;
 }
 
 .foto-link, .foto-link:visited, .foto-link:hover, .foto-link:active {
