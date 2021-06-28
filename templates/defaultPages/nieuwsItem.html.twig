@@ -2,16 +2,18 @@
 
 {% block body %}
     {% if nieuwsItem %}
-        <div class="card border-secondary text-white mb-2">
-            {% if nieuwsItem.picturePath != "" %}
-                <img class="card-img headerImage mainImage" src="{{ asset('uploads/') ~ nieuwsItem.picturePath }}" alt="Card image">
+            {% if nieuwsItem.picturePath != "" and nieuwsItem.picturePath != null %}
+                <div class="card border-secondary text-white mb-2">
+                    <img class="card-img headerImage mainImage" src="{{ asset('uploads/') ~ nieuwsItem.picturePath }}" alt="Card image">
+                    <div class="card-img-overlay">
+                        <h1 class="card-title centered headerTitle">{{ nieuwsItem.title }}</h1>
+                    </div>
+                </div>
             {% else %}
-
+                <div class="d-flex justify-content-center w-100">
+                    <h1 >{{ nieuwsItem.title }}</h1>
+                </div>
             {% endif %}
-            <div class="card-img-overlay">
-                <h1 class="card-title centered headerTitle">{{ nieuwsItem.title }}</h1>
-            </div>
-        </div>
 
         <div class="jumbotron">
             <p class="lead blockquote-footer">{{ nieuwsItem.submitDate }} door {{ nieuwsItem.author }}</p>

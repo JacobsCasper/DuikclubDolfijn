@@ -12,6 +12,7 @@
             <thead>
             <tr>
                 <th scope="col">Role</th>
+                <th scope="col">Bestuurslid</th>
                 <th scope="col">Naam</th>
                 <th scope="col">Email</th>
                 <th scope="col">Password</th>
@@ -30,6 +31,11 @@
                         {% endif %}
                     {% else %}
                         <td><span class="badge badge-pill badge-success">USER</span></td>
+                    {% endif %}
+                    {% if user.isBestuursLid %}
+                        <td><i class="fas fa-check-circle" style="color: #02b875"></i></td>
+                    {% else %}
+                        <td><i class="fas fa-times-circle" style="color: #d9534f"></i></td>
                     {% endif %}
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
