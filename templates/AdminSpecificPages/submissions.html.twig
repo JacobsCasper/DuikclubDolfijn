@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if submissions %}
+    <div class="text-center mb-3">
+        <a class="btn btn-primary" href="{{ path('markAsSeen') }}">
+            <i class="fas fa-eye"></i>&nbsp;&nbsp;
+            Mark as seen
+        </a>
+        <a class="btn btn-danger" href="{{ path('removeAllSubmissions') }}">
+            <i class="fas fa-trash"></i>&nbsp;&nbsp;
+            Remove all submissions
+        </a>
+    </div>
+        <div class="row">
+            {% for submission in submissions %}
+                <div class="col-4 h-25">
+                    {% if not submission.checked %}
+                        <div class="card border-primary" style="width: 18rem;">
+                    {% else %}
+                        <div class="card" style="width: 18rem;">
+                    {% endif %}
+                        <div class="card-body">
+                            <h4 class="card-title">{{ submission.username }}</h4>
+                            <p class="card-text">
+                                <h6>Ervaring:</h6>
+                                {{ submission.experience }}<br><br>
+                                <h6>Schoenmaat: <small>{{ submission.shoeSize }}</small></h6>
+                                <br>
+                                <a href="mailto:{{ submission.email }}">  <span class="badge badge-warning" style="margin-top: 5px"> <i class="fas fa-paper-plane"></i>&nbsp;&nbsp; {{ submission.email }} </span></a><br>
+                                <a href="tel:{{ submission.phoneNumber }}"><span class="badge badge-danger"  style="margin-top: 5px"><i class="fas fa-phone-alt"></i>&nbsp;&nbsp; {{ submission.phoneNumber }} </span></a>
+                                <a href="https://wa.me/{{ submission.phoneNumber }}" target="_blank"><span class="badge badge-success"  style="margin-top: 5px"><i class="fab fa-whatsapp"></i>&nbsp;&nbsp; {{ submission.phoneNumber }} </span></a><br>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+    {% endif %}
+            <div style="display: flex; justify-content: center; align-items: center;">
+                {{ knp_pagination_render(submissions) }}
+            </div>
+        </div>
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

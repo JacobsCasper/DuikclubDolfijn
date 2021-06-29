@@ -6,6 +6,7 @@ namespace App\Controller;
 
 
 use App\Entity\Page;
+use App\Entity\Submission;
 use App\Entity\User;
 use App\Services\AddGlobalsService;
 use App\Services\publishedPageFilter;
@@ -53,6 +54,77 @@ class AdminController extends AbstractController
         );
         return $this->render('AdminSpecificPages/users.html.twig', array('users' => $results));
     }
+
+    /**
+     * @Route("/submissions", name="getSubmissions")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function getSubmissions(Request $request, PaginatorInterface $paginator){
+        $this->getGlobalVars();
+        $submissions = $this->getDoctrine()->getRepository(Submission::class)->findAll();
+
+        $results = $paginator->paginate(
+            $submissions,
+            $request->query->getInt('page', 1),
+            10
+        );
+/*
+        foreach ($submissions as $sub) {
+            $sub->setChecked(true);
+        }
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->flush();*/
+
+        return $this->render('AdminSpecificPages/submissions.html.twig', array('submissions' => $results));
+    }
+
+    /**
+     * @Route("/submissions/markAsSeen", name="markAsSeen")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function markAsSeen(Request $request, PaginatorInterface $paginator){
+        $this->getGlobalVars();
+        $submissions = $this->getDoctrine()->getRepository(Submission::class)->findAll();
+
+        $results = $paginator->paginate(
+            $submissions,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+                foreach ($submissions as $sub) {
+                    $sub->setChecked(true);
+                }
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->flush();
+
+        return $this->render('AdminSpecificPages/submissions.html.twig', array('submissions' => $results));
+    }
+
+    /**
+     * @Route("/submissions/removeAll", name="removeAllSubmissions")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function removeAllSubmissions(Request $request, PaginatorInterface $paginator){
+        $this->getGlobalVars();
+        $submissions = $this->getDoctrine()->getRepository(Submission::class)->findAll();
+
+        $results = $paginator->paginate(
+            [],
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        $em = $this->getDoctrine()->getManager();
+        foreach ($submissions as $sub) {
+            $em->remove($sub);
+        }
+        $em->flush();
+
+        return $this->render('AdminSpecificPages/submissions.html.twig', array('submissions' => $results));
+    }
+
+
 
     /**
      * @Route("/user/add", name="addUser")
@@ -246,7 +318,7 @@ class AdminController extends AbstractController
             ->add('email', EmailType::class,
                 array('attr' => array('class' => 'form-control'), 'label' => 'email'))
             ->add('phoneNumber', TelType::class,
-                array('attr' => array('class' => 'form-control'), 'label' => 'telefoon nummer'))
+                array('attr' => array('class' => 'form-control'), 'label' => 'telefoonnummer'))
             ->add('UserRole', ChoiceType::class, [
                 'mapped' => false,
                 'label' => 'Welke rol krijgt deze user',
