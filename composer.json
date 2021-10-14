@@ -25,20 +25,20 @@
         "symfony/maker-bundle": "^1.31",
         "symfony/mime": "5.1.*",
         "symfony/phpunit-bridge": "^5.1",
-        "symfony/profiler-pack": "^1.0",
         "symfony/proxy-manager-bridge": "5.1.*",
-        "symfony/security-bundle": "5.1.*",
-        "symfony/twig-pack": "^1.0",
-        "symfony/validator": "5.1.*",
+        "symfony/security-bundle": "5.2.*",
+        "symfony/twig-bundle": "5.1.*",
+        "symfony/validator": "5.2.*",
         "symfony/web-profiler-bundle": "5.1.*",
         "symfony/yaml": "5.1.*",
         "twig/extra-bundle": "^3.3",
-        "twig/intl-extra": "^3.3"
+        "twig/intl-extra": "^3.3",
+        "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "symfony/phpunit-bridge": "^5.1",
-        "symfony/profiler-pack": "^1.0"
+        "symfony/stopwatch": "5.1.*"
     },
     "config": {
         "optimize-autoloader": true,
