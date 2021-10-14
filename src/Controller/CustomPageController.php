@@ -145,7 +145,7 @@ class CustomPageController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
-            return $this->redirectToRoute("getAllPages");
+            return $this->redirectToRoute("getPage", ['id' => $id, 'request' => $request]);
         }
 
         return $this->render('forms/defaultBigForms.html.twig', array(

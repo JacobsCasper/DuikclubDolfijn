@@ -129,4 +129,15 @@ class Subscription
     }
 
 
+    public function promote() : void
+    {
+        if(!$this->getCalenderItem()->maxSubscriptionsReached()) {
+            $this->setStatus('subscribed');
+        }
+    }
+
+    public function demote() : void
+    {
+        $this->setStatus('awaiting');
+    }
 }

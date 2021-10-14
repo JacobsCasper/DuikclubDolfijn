@@ -78,7 +78,7 @@
         </div>
         <div>
             {% if app.user %}
-                {% if subscribed[0] is defined%}
+                {% if not(subscribed is empty) %}
                     <h1 class="text-center m-5">
                         Inschrijvingen
                     </h1>
@@ -88,6 +88,7 @@
                             <th scope="col">Naam</th>
                             <th scope="col">Email</th>
                             {% if role %}
+                                <th scope="col">Naar wachtlijst</th>
                                 <th scope="col">Remove</th>
                             {% endif %}
                         </tr>
@@ -98,6 +99,10 @@
                                 <td>{{ sub.user.username }}</td>
                                 <td>{{ sub.user.email }}</td>
                                 {% if role %}
+                                    <td><a class="btn btn-warning" href="{{ path('demoteSub', {'calId': kalenderItem.id, 'userId': sub.user.id }) }}">
+                                            <i class="fas fa-clipboard-list"></i>&nbsp;&nbsp;
+                                            Naar wachtlijst
+                                        </a></td>
                                     <td><a class="btn btn-danger" href="{{ path('removeSub', {'calId': kalenderItem.id, 'userId': sub.user.id }) }}">
                                             <i class="fas fa-trash"></i>&nbsp;&nbsp;
                                             Delete
@@ -112,7 +117,10 @@
                         <h5>Er zijn nog geen inschrijvingen.</h5>
                     </div>
                 {% endif %}
-                {% if awaiting[0] is defined and (kalenderItem.maxSubscriptions - (subscribed|length)) <= 0%}
+
+
+                {% if not(awaiting is empty) %}
+
                     <h1 class="text-center m-5">
                         Wachtlijst
                     </h1>
@@ -122,6 +130,7 @@
                             <th scope="col">Naam</th>
                             <th scope="col">Email</th>
                             {% if role %}
+                                <th scope="col">Inschrijven</th>
                                 <th scope="col">Remove</th>
                             {% endif %}
                         </tr>
@@ -132,6 +141,10 @@
                                 <td>{{ sub.user.username }}</td>
                                 <td>{{ sub.user.email }}</td>
                                 {% if role %}
+                                    <td><a class="btn btn-info" href="{{ path('promoteSub', {'calId': kalenderItem.id, 'userId': sub.user.id }) }}">
+                                            <i class="fas fa-pen"></i>&nbsp;&nbsp;
+                                            Inschrijven
+                                        </a></td>
                                     <td><a class="btn btn-danger" href="{{ path('removeSub', {'calId': kalenderItem.id, 'userId': sub.user.id }) }}">
                                             <i class="fas fa-trash"></i>&nbsp;&nbsp;
                                             Delete
@@ -141,7 +154,8 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                {% elseif (kalenderItem.maxSubscriptions - (subscribed|length)) <= 0%}
+
+                {% else %}
                     <div class="d-flex justify-content-center w-100">
                         <h5>De wachtlijst is leeg.</h5>
                     </div>

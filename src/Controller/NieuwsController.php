@@ -142,7 +142,7 @@ class NieuwsController extends AbstractController {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
-            return $this->redirectToRoute('nieuws');
+            return $this->redirectToRoute('nieuwsItem', ['id' => $id]);
         }
 
         return $this->render('forms/defaultBigForms.html.twig', array(

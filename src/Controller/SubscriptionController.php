@@ -15,16 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SubscriptionController extends AbstractController
 {
-    private CalenderController $calenderController;
-    //remove user (admin)
-    /**
-     * SubscriptionController constructor.
-     */
-    public function __construct(CalenderController $calenderController)
-    {
-        $this->calenderController = $calenderController;
-    }
-
 
     /**
      * @Route("/sub/{calId}/{userId}", name="subUser")
@@ -41,7 +31,7 @@ class SubscriptionController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->calenderController->calItem($calId, $request, $paginator);
+        return $this->redirectToRoute('calItem', ['id' => $calId]);
     }
 
     /**
@@ -60,7 +50,45 @@ class SubscriptionController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->calenderController->calItem($calId, $request, $paginator);
+        return $this->redirectToRoute('calItem', ['id' => $calId]);
+    }
+
+    /**
+     * @Route("/promote/{calId}/{userId}", name="promoteSub")
+     * @IsGranted("ROLE_INST")
+     */
+    public function promoteSub($calId, $userId, Request $request, PaginatorInterface $paginator)
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+        $cal = $this->getDoctrine()->getRepository(CalenderItem::class)->find($calId);
+        $subscription = $cal->getUserSubscriptionByUser($user);
+
+        if($subscription) {
+            $subscription->promote();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('calItem', ['id' => $calId]);
+    }
+
+    /**
+     * @Route("/demote/{calId}/{userId}", name="demoteSub")
+     * @IsGranted("ROLE_INST")
+     */
+    public function demoteSub($calId, $userId, Request $request, PaginatorInterface $paginator)
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+        $cal = $this->getDoctrine()->getRepository(CalenderItem::class)->find($calId);
+        $subscription = $cal->getUserSubscriptionByUser($user);
+
+        if($subscription) {
+            $subscription->demote();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('calItem', ['id' => $calId]);
     }
 
 }

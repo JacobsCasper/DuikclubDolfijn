@@ -119,10 +119,7 @@ class AnswerController extends AbstractController
         }
         $entityManager->flush();
 
-        return $this->render('AdminSpecificPages/answers.html.twig',
-            array(
-                'formId' => $id
-            ));
+        return $this->redirectToRoute('answers', ['id' => $id, 'request' => $request, 'paginator' => $paginator]);
     }
 
     private function getGlobalVars(){

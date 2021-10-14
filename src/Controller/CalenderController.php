@@ -114,7 +114,7 @@ class CalenderController extends AbstractController {
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
-            return $this->calItem($id, $request, $paginator);
+            return $this->redirectToRoute('calItem', ['id' => $id, 'request' => $request, 'paginator' => $paginator]);
         }
 
         return $this->render('forms/defaultBigForms.html.twig', array(

@@ -154,16 +154,7 @@ class FormController extends AbstractController
             $entityManager->persist($stringElement);
             $entityManager->flush();
 
-            $formElements = $this->getElements($webForm);
-            $formTemplate = $this->formTemplateGenerator->getForm($formElements, $this->createFormBuilder())->getForm();
-
-            return $this->render('AdminSpecificPages/EditWebForm.html.twig'
-                , array(
-                    'formElements' => $formElements,
-                    'currentForm' => $webForm,
-                    'form' => $formTemplate->createView(),
-                    'formTitle' => $webForm->getTitle()
-                ));
+            return $this->redirectToRoute('editForm', ['id' => $id]);
         }
 
         return $this->render('forms/defaultForms.html.twig', array(
@@ -195,16 +186,7 @@ class FormController extends AbstractController
             $entityManager->persist($emailElement);
             $entityManager->flush();
 
-            $formElements = $this->getElements($webForm);
-            $formTemplate = $this->formTemplateGenerator->getForm($formElements, $this->createFormBuilder())->getForm();
-
-            return $this->render('AdminSpecificPages/EditWebForm.html.twig'
-                , array(
-                    'formElements' => $formElements,
-                    'currentForm' => $webForm,
-                    'form' => $formTemplate->createView(),
-                    'formTitle' => $webForm->getTitle()
-                ));
+            return $this->redirectToRoute('editForm', ['id' => $id]);
         }
 
         return $this->render('forms/defaultForms.html.twig', array(
@@ -235,16 +217,7 @@ class FormController extends AbstractController
             $entityManager->persist($intElement);
             $entityManager->flush();
 
-            $formElements = $this->getElements($webForm);
-            $formTemplate = $this->formTemplateGenerator->getForm($formElements, $this->createFormBuilder())->getForm();
-
-            return $this->render('AdminSpecificPages/EditWebForm.html.twig'
-                , array(
-                    'formElements' => $formElements,
-                    'currentForm' => $webForm,
-                    'form' => $formTemplate->createView(),
-                    'formTitle' => $webForm->getTitle()
-                ));
+            return $this->redirectToRoute('editForm', ['id' => $id]);
         }
 
         return $this->render('forms/defaultForms.html.twig', array(
@@ -279,16 +252,7 @@ class FormController extends AbstractController
             $entityManager->persist($radioElement);
             $entityManager->flush();
 
-            $formElements = $this->getElements($webForm);
-            $formTemplate = $this->formTemplateGenerator->getForm($formElements, $this->createFormBuilder())->getForm();
-
-            return $this->render('AdminSpecificPages/EditWebForm.html.twig'
-                , array(
-                    'formElements' => $formElements,
-                    'currentForm' => $webForm,
-                    'form' => $formTemplate->createView(),
-                    'formTitle' => $webForm->getTitle()
-                ));
+            return $this->redirectToRoute('editForm', ['id' => $id]);
         }
 
         return $this->render('forms/defaultForms.html.twig', array(
@@ -323,16 +287,7 @@ class FormController extends AbstractController
         $entityManager->remove($element);
         $entityManager->flush();
 
-        $formElements = $this->getElements($webForm);
-        $formTemplate = $this->formTemplateGenerator->getForm($formElements, $this->createFormBuilder())->getForm();
-
-        return $this->render('AdminSpecificPages/EditWebForm.html.twig'
-            , array(
-                'formElements' => $formElements,
-                'currentForm' => $webForm,
-                'form' => $formTemplate->createView(),
-                'formTitle' => $webForm->getTitle()
-            ));
+        return $this->redirectToRoute('editForm', ['id' => $id]);
     }
 
     /**
