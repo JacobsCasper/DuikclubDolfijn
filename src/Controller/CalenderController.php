@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Services\AddGlobalsService;
 use App\Services\CalenderTypes;
 use App\Services\publishedPageFilter;
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -144,12 +145,33 @@ class CalenderController extends AbstractController {
     {
         $this->getGlobalVars();
         $kalenderItem = $this->getDoctrine()->getRepository(CalenderItem::class)->find($id);
-        $users = $paginator->paginate(
-            $kalenderItem->getUsers(),
-            $request->query->getInt('page', 1),
-            10
+        $subs = $kalenderItem->getSubscriptions();
+        $users = [];
+        foreach ($subs as $sub) {
+            array_push($users, $sub->getUser());
+        }
+
+        $awaiting = $subs->filter(function ($item) {
+            return strcmp($item->getStatus(), 'awaiting') == 0;
+        })->toArray();
+        $subscribed = $subs->filter(function ($item) {
+            return strcmp($item->getStatus(), 'subscribed') == 0;
+        })->toArray();
+
+        uasort($awaiting,
+            fn($a, $b) => strtotime($a->getDateString()) <=> strtotime($b->getDateString())
         );
-        return $this->render('defaultPages/kalenderItem.html.twig', array('kalenderItem' => $kalenderItem, 'users' => $users));
+        uasort($subscribed,
+            fn($a, $b) => strtotime($a->getDateString()) <=> strtotime($b->getDateString())
+        );
+
+        return $this->render('defaultPages/kalenderItem.html.twig',
+            array(
+                'kalenderItem' => $kalenderItem,
+                'subs' => $subs, 'users' => $users,
+                'subscribed' => $subscribed,
+                'awaiting' => $awaiting
+            ));
     }
 
     private function getCalenderItemForm($calenderItem, $buttonName){

@@ -33,11 +33,13 @@ class SubscriptionController extends AbstractController
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
         $cal = $this->getDoctrine()->getRepository(CalenderItem::class)->find($calId);
-        $cal->addSubscriber($user);
+        $subscription = $cal->addSubscriber($user);
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($cal);
-        $entityManager->flush();
+        if($subscription) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($subscription);
+            $entityManager->flush();
+        }
 
         return $this->calenderController->calItem($calId, $request, $paginator);
     }
@@ -50,11 +52,13 @@ class SubscriptionController extends AbstractController
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
         $cal = $this->getDoctrine()->getRepository(CalenderItem::class)->find($calId);
-        $cal->removeSubscriber($user);
+        $subscription = $cal->getUserSubscriptionByUser($user);
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($cal);
-        $entityManager->flush();
+        if($subscription) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($subscription);
+            $entityManager->flush();
+        }
 
         return $this->calenderController->calItem($calId, $request, $paginator);
     }

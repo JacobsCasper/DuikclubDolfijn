@@ -28,7 +28,7 @@
                     <td>
                         {% if item.startDate|date("m/d/Y") == item.endDate|date("m/d/Y") %}
                             <p class="card-title">{{ item.startDate|format_datetime('full', 'none', locale='nl') }}</p>
-                            <p class="card-title">van {{ item.startDate|date("g:i") }} tot {{ item.endDate|date("g:i") }}</p>
+                            <p class="card-title">van {{ item.startDate|format_datetime(pattern="HH:mm") }} tot {{ item.endDate|format_datetime(pattern="HH:mm") }}</p>
                         {% else %}
                             <p class="card-title">{{ item.startDate|date("m/d/Y") }} - {{ item.endDate|date("m/d/Y") }}</p>
                         {% endif %}

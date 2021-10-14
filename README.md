@@ -33,3 +33,13 @@ $ php bin/console doctrine:fixtures:load
 >
 >You should be able to login as administrator using the following credentials. (Username: admin, password: admin)
 
+## Config
+
+````shell
+$ php bin/console doctrine:database:create
+$ php bin/console doctrine:migrations:migrate
+$ php bin/console doctrine:fixtures:load #this will create the rootuser (admnin/admin)
+
+$ php bin/console ckeditor:install
+$ php bin/console assets:install public #this will install ckeditor properly
+````

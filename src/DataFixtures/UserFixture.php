@@ -25,6 +25,10 @@ class UserFixture extends Fixture
             $this->encoder->encodePassword($user, 'admin')
         );
         $user->setEmail('admin');
+        $user->setPhoneNumber('0499465118');
+        $user->setDescription("root user");
+        $user->setIsBestuursLid(false);
+        $user->setProfilePicturePath("");
         $user->makeAdmin();
 
         $manager->persist($user);

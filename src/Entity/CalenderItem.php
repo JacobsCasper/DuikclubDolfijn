@@ -66,13 +66,6 @@ class CalenderItem
     private $details;
 
     /**
-     * Many CalenderItems have Many Users.
-     * @ManyToMany(targetEntity="User", inversedBy="CalenderItems")
-     * @JoinTable(name="users_calenderItems")
-     */
-    private $users;
-
-    /**
      * @ORM\Column (type="integer")
      */
     private $maxSubscriptions;
@@ -82,24 +75,14 @@ class CalenderItem
      */
     private $subscriptionEndDate;
 
+    /**
+     * One CalenderItem has many subscriptions. This is the inverse side.
+     * @OneToMany(targetEntity="Subscription", mappedBy="calenderItem")
+     */
+    private Collection $subscriptions;
+
     public function __construct() {
-        $this->users = new ArrayCollection();
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    /**
-     * @param Collection $users
-     */
-    public function setUsers(Collection $users): void
-    {
-        $this->users = $users;
+        $this->subscriptions = new ArrayCollection();
     }
 
     /**
@@ -255,6 +238,24 @@ class CalenderItem
     }
 
     /**
+     * @return Collection
+     */
+    public function getSubscriptions(): Collection
+    {
+        return $this->subscriptions;
+    }
+
+    /**
+     * @param Collection $subscriptions
+     */
+    public function setSubscriptions(Collection $subscriptions): void
+    {
+        $this->subscriptions = new ArrayCollection($subscriptions->getValues());
+    }
+
+
+
+    /**
      * @return mixed
      */
     public function getSubscriptionEndDate()
@@ -277,7 +278,7 @@ class CalenderItem
 
 
     public function maxSubscriptionsReached(){
-        if(count($this->getUsers()) >= $this->maxSubscriptions){
+        if(count($this->getSubscriptions()) >= $this->maxSubscriptions){
             return true;
         }
         return false;
@@ -300,23 +301,34 @@ class CalenderItem
         }
     }
 
-    public function addSubscriber(User $user): bool
+    public function addSubscriber(User $user): ?Subscription
     {
-        if($this->maxSubscriptionsReached() || $this->subscriptionDateExpired()){
-            return false;
+        $subscription = new Subscription($user, $this);
+        if($this->subscriptionDateExpired()){
+            return null;
+        } else if($this->maxSubscriptionsReached()) {
+            $subscription->setStatus('awaiting');
+            return $subscription;
         } else {
-            $this->getUsers()->add($user);
-            return true;
+            $subscription->setStatus('subscribed');
+            return $subscription;
         }
+    }
+
+    public function getUserSubscriptionByUser(User $user): ?Subscription {
+        $filtered_collection = $this->getSubscriptions()->filter(function ($item) use ($user) {
+            return $item->getUser()->equals($user);
+        });
+        return $filtered_collection[0];
     }
 
     public function removeSubscriber(User $user): void
     {
-        $filtered_collection = $this->getUsers()->filter(function ($item) use ($user) {
-            return !$item->equals($user);
+        $filtered_collection = $this->getSubscriptions()->filter(function ($item) use ($user) {
+            return !$item->getUser()->equals($user);
         });
 
-        $this->setUsers($filtered_collection);
+        $this->setSubscriptions($filtered_collection);
     }
 
 

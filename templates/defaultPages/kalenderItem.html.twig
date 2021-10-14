@@ -19,15 +19,29 @@
             {% endif %}
             <h1 class="display-3">{{ kalenderItem.title }}</h1>
 
-            <div>
-                {% if kalenderItem.startDate|date("m/d/Y") == kalenderItem.endDate|date("m/d/Y") %}
-                    <p class="lead">{{ kalenderItem.startDate|format_datetime('full', 'none', locale='nl') }} van {{ kalenderItem.startDate|format_datetime(pattern="HH:mm") }} tot {{ kalenderItem.endDate|format_datetime(pattern="HH:mm") }}</p>
-                {% else %}
-                    <p class="lead">van {{ kalenderItem.startDate|date("m/d/Y") }} om {{ kalenderItem.startDate|format_datetime(pattern="HH:mm") }} tot {{ kalenderItem.endDate|date("m/d/Y") }} om {{ kalenderItem.endDate|format_datetime(pattern="HH:mm") }}</p>
-                {% endif %}
-            </div>
+            <span class="d-flex justify-content-between">
+                <div>
+                    {% if kalenderItem.startDate|date("m/d/Y") == kalenderItem.endDate|date("m/d/Y") %}
+                        <p class="lead text-left">{{ kalenderItem.startDate|format_datetime('full', 'none', locale='nl') }} van {{ kalenderItem.startDate|format_datetime(pattern="HH:mm") }} tot {{ kalenderItem.endDate|format_datetime(pattern="HH:mm") }}</p>
+                    {% else %}
+                        <p class="lead text-left">van {{ kalenderItem.startDate|date("m/d/Y") }} om {{ kalenderItem.startDate|format_datetime(pattern="HH:mm") }} tot {{ kalenderItem.endDate|date("m/d/Y") }} om {{ kalenderItem.endDate|format_datetime(pattern="HH:mm") }}</p>
+                    {% endif %}
 
-            <p class="lead">{{ kalenderItem.description }}</p>
+                    <p class="lead text-left">{{ kalenderItem.description }}</p>
+                </div>
+                <div>
+                    <p class="lead text-right"> einddatum inschrijvingen {{ kalenderItem.subscriptionEndDate|date("m/d/Y") }}</p>
+                    <p class="lead text-right">
+                        {% if kalenderItem.maxSubscriptions - (subscribed|length) == 1 %}
+                            {{ kalenderItem.maxSubscriptions - (subscribed|length) }} vrije plaats
+                        {% elseif kalenderItem.maxSubscriptions - (subscribed|length) > 1 %}
+                            {{ kalenderItem.maxSubscriptions - (subscribed|length) }} vrije plaatsen
+                        {% else %}
+                            volzet
+                        {% endif %}
+                    </p>
+                </div>
+            </span>
             <hr class="my-4">
             <p>{{ kalenderItem.details | raw }}</p>
             <p class="lead blockquote-footer">{{ kalenderItem.submitDate }} door {{ kalenderItem.author }}</p>
@@ -64,7 +78,7 @@
         </div>
         <div>
             {% if app.user %}
-                {% if users[0] is defined%}
+                {% if subscribed[0] is defined%}
                     <h1 class="text-center m-5">
                         Inschrijvingen
                     </h1>
@@ -79,12 +93,12 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for user in users %}
+                        {% for sub in subscribed %}
                             <tr>
-                                <td>{{ user.username }}</td>
-                                <td>{{ user.email }}</td>
+                                <td>{{ sub.user.username }}</td>
+                                <td>{{ sub.user.email }}</td>
                                 {% if role %}
-                                    <td><a class="btn btn-danger" href="{{ path('removeSub', {'calId': kalenderItem.id, 'userId': user.id }) }}">
+                                    <td><a class="btn btn-danger" href="{{ path('removeSub', {'calId': kalenderItem.id, 'userId': sub.user.id }) }}">
                                             <i class="fas fa-trash"></i>&nbsp;&nbsp;
                                             Delete
                                         </a></td>
@@ -93,12 +107,43 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                    <div style="display: flex; justify-content: center; align-items: center;">
-                        {{ knp_pagination_render(users) }}
-                    </div>
                 {% else %}
                     <div class="d-flex justify-content-center w-100">
                         <h5>Er zijn nog geen inschrijvingen.</h5>
+                    </div>
+                {% endif %}
+                {% if awaiting[0] is defined and (kalenderItem.maxSubscriptions - (subscribed|length)) <= 0%}
+                    <h1 class="text-center m-5">
+                        Wachtlijst
+                    </h1>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">Naam</th>
+                            <th scope="col">Email</th>
+                            {% if role %}
+                                <th scope="col">Remove</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for sub in awaiting %}
+                            <tr>
+                                <td>{{ sub.user.username }}</td>
+                                <td>{{ sub.user.email }}</td>
+                                {% if role %}
+                                    <td><a class="btn btn-danger" href="{{ path('removeSub', {'calId': kalenderItem.id, 'userId': sub.user.id }) }}">
+                                            <i class="fas fa-trash"></i>&nbsp;&nbsp;
+                                            Delete
+                                        </a></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% elseif (kalenderItem.maxSubscriptions - (subscribed|length)) <= 0%}
+                    <div class="d-flex justify-content-center w-100">
+                        <h5>De wachtlijst is leeg.</h5>
                     </div>
                 {% endif %}
             {% endif %}
