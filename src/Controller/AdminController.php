@@ -160,6 +160,10 @@ class AdminController extends AbstractController
                 $user->makeUser();
             }
 
+            if($user->getDescription() == null) {
+                $user->setDescription("");
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
@@ -208,6 +212,10 @@ class AdminController extends AbstractController
                 $user->makeUser();
             }
 
+            if($user->getDescription() == null) {
+                $user->setDescription("");
+            }
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
