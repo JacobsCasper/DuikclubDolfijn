@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Answer;
 use App\Entity\Page;
 use App\Entity\WebForm;
 use App\Entity\WebFormElement;
@@ -73,7 +74,8 @@ class FormController extends AbstractController
         foreach ($formElements = $this->getElements($webForm) as $element) {
             $entityManager->remove($element);
         }
-        foreach ($webForm->getAnswers() as $answer) {
+        $answers = $this->getDoctrine()->getRepository(Answer::class)->findBy(['parent_id'=> $id]);
+        foreach ($answers as $answer) {
             $entityManager->remove($answer);
         }
         $entityManager->flush();
