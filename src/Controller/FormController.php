@@ -73,6 +73,9 @@ class FormController extends AbstractController
         foreach ($formElements = $this->getElements($webForm) as $element) {
             $entityManager->remove($element);
         }
+        foreach ($webForm->getAnswers() as $answer) {
+            $entityManager->remove($answer);
+        }
         $entityManager->flush();
         $entityManager->remove($webForm);
         $entityManager->flush();
