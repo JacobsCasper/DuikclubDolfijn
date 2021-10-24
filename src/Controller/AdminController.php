@@ -145,7 +145,7 @@ class AdminController extends AbstractController
             if ($picture) {
                 $user->setPicture($slugger, $picture, $this->getParameter('profilePictures_directory'));
             } else{
-                $user->setPicturePath("");
+                $user->setProfilePicturePath("");
             }
 
             $password = $user->getPassword();
