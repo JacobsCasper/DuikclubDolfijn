@@ -336,7 +336,7 @@ class AdminController extends AbstractController
                 'required' => false,
                 'attr' => array('class' => 'form-control')))
             ->add('description', TextType::class,
-                array('attr' => array('class' => 'form-control'), 'label' => 'omschrijving', 'required' => true))
+                array('attr' => array('class' => 'form-control'), 'label' => 'omschrijving', 'required' => false))
             ->add('picture', FileType::class, array(
                 'mapped' => false,
                 'label' => "Afbeelding",
