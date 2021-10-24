@@ -9,6 +9,10 @@
         <link rel="stylesheet" href="{{ asset('css/custom.css') }}"/>
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"/>
         <script src="https://kit.fontawesome.com/26d4a64054.js"></script>
+        {% block metaTag %}
+            <meta name="description" content="Wil je leren duiken of gewoon gezellig duiken in een aangename clubsfeer, dan zit je hier goed.
+Wij zijn in de eerste plaats een gezellige duikclub die sportduikers alle mogelijkheden geeft om hun hobby uit te oefenen. Daarnaast is Dolfijn ook een duikschool met ervaren instructeurs en duikers die met veel plezier helpen bij de eerste en verdere stappen onder water.">
+        {% endblock %}
         {% block stylesheets %}{% endblock %}
     </head>
     <body style="background-image:url('{{ asset(backgroundImage) }}')">

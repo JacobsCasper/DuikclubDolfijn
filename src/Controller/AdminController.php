@@ -215,7 +215,7 @@ class AdminController extends AbstractController
             if($user->getDescription() == null) {
                 $user->setDescription("");
             }
-            
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
