@@ -24,13 +24,13 @@
                     {% if kalenderItem.startDate|date("m/d/Y") == kalenderItem.endDate|date("m/d/Y") %}
                         <p class="lead text-left">{{ kalenderItem.startDate|format_datetime('full', 'none', locale='nl') }} van {{ kalenderItem.startDate|format_datetime(pattern="HH:mm") }} tot {{ kalenderItem.endDate|format_datetime(pattern="HH:mm") }}</p>
                     {% else %}
-                        <p class="lead text-left">van {{ kalenderItem.startDate|date("m/d/Y") }} om {{ kalenderItem.startDate|format_datetime(pattern="HH:mm") }} tot {{ kalenderItem.endDate|date("m/d/Y") }} om {{ kalenderItem.endDate|format_datetime(pattern="HH:mm") }}</p>
+                        <p class="lead text-left">van {{ kalenderItem.startDate|date("d/m/Y") }} om {{ kalenderItem.startDate|format_datetime(pattern="HH:mm") }} tot {{ kalenderItem.endDate|date("d/m/Y") }} om {{ kalenderItem.endDate|format_datetime(pattern="HH:mm") }}</p>
                     {% endif %}
 
                     <p class="lead text-left">{{ kalenderItem.description }}</p>
                 </div>
                 <div>
-                    <p class="lead text-right"> einddatum inschrijvingen {{ kalenderItem.subscriptionEndDate|date("m/d/Y") }}</p>
+                    <p class="lead text-right"> einddatum inschrijvingen {{ kalenderItem.subscriptionEndDate|date("d/m/Y") }}</p>
                     <p class="lead text-right">
                         {% if kalenderItem.maxSubscriptions - (subscribed|length) == 1 %}
                             {{ kalenderItem.maxSubscriptions - (subscribed|length) }} vrije plaats

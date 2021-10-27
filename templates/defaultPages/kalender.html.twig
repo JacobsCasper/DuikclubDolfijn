@@ -39,7 +39,7 @@
                                 <h5 class="card-title">{{ item.startDate|format_datetime('full', 'none', locale='nl') }}</h5>
                                 <h5 class="card-title">van {{ item.startDate|format_datetime(pattern="HH:mm") }} tot {{ item.endDate|format_datetime(pattern="HH:mm") }}</h5>
                             {% else %}
-                                <h5 class="card-title">{{ item.startDate|date("m/d/Y") }} - {{ item.endDate|date("m/d/Y") }}</h5>
+                                <h5 class="card-title">{{ item.startDate|date("d/m/Y") }} - {{ item.endDate|date("d/m/Y") }}</h5>
                             {% endif %}
                             <p class="card-text">{{ item.description }}</p>
                             <a class="btn btn-link" href="/kalender/{{ item.id }}">details</a>
