@@ -34,10 +34,13 @@ class CalenderController extends AbstractController {
     {
         $this->getGlobalVars();
         $calenderItems = $this->getDoctrine()->getRepository(CalenderItem::class)->findAll();
-        $query = array_reverse($calenderItems);
+
+        uasort($calenderItems,
+            fn($a, $b) => strtotime($a->getStartDate()->format('d/m/Y')) <=> strtotime($b->getStartDate()->format('d/m/Y'))
+        );
 
         $results = $paginator->paginate(
-            $query,
+            $calenderItems,
             $request->query->getInt('page', 1),
             9
         );
@@ -51,10 +54,12 @@ class CalenderController extends AbstractController {
     {
         $this->getGlobalVars();
         $calenderItems = $this->getDoctrine()->getRepository(CalenderItem::class)->findAll();
-        $query = array_reverse($calenderItems);
+        uasort($calenderItems,
+            fn($a, $b) => strtotime($a->getStartDate()->format('d/m/Y')) <=> strtotime($b->getStartDate()->format('d/m/Y'))
+        );
 
         $results = $paginator->paginate(
-            $query,
+            $calenderItems,
             $request->query->getInt('page', 1),
             30
         );

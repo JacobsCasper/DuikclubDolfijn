@@ -21,10 +21,10 @@
     {% if calenderItems %}
         <div class="p-0 row">
             {% for item in calenderItems %}
-                <div class="col-4 h-25">
-                    <div class="card border-primary mb-5" style="max-width: 18rem;">
+                <div class="col-lg-4 container col-lg-pull-12">
+                    <div class="card border-primary mb-5 h-75">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            {{ item.title }}
+                            {{ item.title|u.truncate(30, "...") }}
                             {% if item.CalenderType==0 %}
                                 <span class="badge badge-pill badge-primary">Duiken</span>
                             {% elseif item.CalenderType==1 %}
@@ -36,12 +36,14 @@
                         </div>
                         <div class="card-body">
                             {% if item.startDate|date("m/d/Y") == item.endDate|date("m/d/Y") %}
-                                <h5 class="card-title">{{ item.startDate|format_datetime('full', 'none', locale='nl') }}</h5>
-                                <h5 class="card-title">van {{ item.startDate|format_datetime(pattern="HH:mm") }} tot {{ item.endDate|format_datetime(pattern="HH:mm") }}</h5>
+                                <small class="card-title">{{ item.startDate|format_datetime('full', 'none', locale='nl') }}</small>
+                                <small class="card-title">van {{ item.startDate|format_datetime(pattern="HH:mm") }} tot {{ item.endDate|format_datetime(pattern="HH:mm") }}</small>
                             {% else %}
-                                <h5 class="card-title">{{ item.startDate|date("d/m/Y") }} - {{ item.endDate|date("d/m/Y") }}</h5>
+                                <small class="card-title">{{ item.startDate|date("d/m/Y") }} - {{ item.endDate|date("d/m/Y") }}</small>
                             {% endif %}
-                            <p class="card-text">{{ item.description }}</p>
+                            <br>
+                            <i><small class="card-text">{{ item.description|u.truncate(100, "...") }}</small></i>
+                            <br>
                             <a class="btn btn-link" href="/kalender/{{ item.id }}">details</a>
                         </div>
                     </div>
