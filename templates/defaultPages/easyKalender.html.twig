@@ -14,7 +14,11 @@
             </thead>
             <tbody>
             {% for item in calenderItems %}
-                <tr>
+                {% if date(item.startDate) > date() %}
+                    <tr>
+                {% else %}
+                    <tr class="table-secondary">
+                {% endif %}
                     <td>
                     {% if item.CalenderType==0 %}
                         <span class="badge badge-pill badge-primary">Duiken</span>

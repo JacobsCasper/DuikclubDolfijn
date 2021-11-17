@@ -33,11 +33,7 @@ class CalenderController extends AbstractController {
     public function kalender(Request $request, PaginatorInterface $paginator)
     {
         $this->getGlobalVars();
-        $calenderItems = $this->getDoctrine()->getRepository(CalenderItem::class)->findAll();
-
-        uasort($calenderItems,
-            fn($a, $b) => strtotime($a->getStartDate()->format('d/m/Y')) <=> strtotime($b->getStartDate()->format('d/m/Y'))
-        );
+        $calenderItems = $this->getDoctrine()->getRepository(CalenderItem::class)->findBy([], ['startDate'=>'DESC']);
 
         $results = $paginator->paginate(
             $calenderItems,
@@ -53,10 +49,7 @@ class CalenderController extends AbstractController {
     public function easyKalender(Request $request, PaginatorInterface $paginator)
     {
         $this->getGlobalVars();
-        $calenderItems = $this->getDoctrine()->getRepository(CalenderItem::class)->findAll();
-        uasort($calenderItems,
-            fn($a, $b) => strtotime($a->getStartDate()->format('d/m/Y')) <=> strtotime($b->getStartDate()->format('d/m/Y'))
-        );
+        $calenderItems = $this->getDoctrine()->getRepository(CalenderItem::class)->findBy([], ['startDate'=>'DESC']);
 
         $results = $paginator->paginate(
             $calenderItems,
@@ -227,6 +220,10 @@ class CalenderController extends AbstractController {
             ))
             ->getForm();
 
+    }
+
+    function sortFunction( $a, $b ) {
+        return strtotime($a->getStartDate()->format('d/m/Y')) - strtotime($b->getStartDate()->format('d/m/Y'));
     }
 
     private function getGlobalVars(){
