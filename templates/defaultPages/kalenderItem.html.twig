@@ -32,11 +32,11 @@
                 <div>
                     <p class="lead text-right"> einddatum inschrijvingen {{ kalenderItem.subscriptionEndDate|date("d/m/Y") }}</p>
                     <p class="lead text-right">
-                        {% if kalenderItem.maxSubscriptions - (subscribed|length) == 1 %}
+                        {% if kalenderItem.maxSubscriptions - (subscribed|length) == 1 and kalenderItem.maxSubscriptions > 0 %}
                             {{ kalenderItem.maxSubscriptions - (subscribed|length) }} vrije plaats
-                        {% elseif kalenderItem.maxSubscriptions - (subscribed|length) > 1 %}
+                        {% elseif kalenderItem.maxSubscriptions - (subscribed|length) > 1 and kalenderItem.maxSubscriptions > 0 %}
                             {{ kalenderItem.maxSubscriptions - (subscribed|length) }} vrije plaatsen
-                        {% else %}
+                        {% elseif kalenderItem.maxSubscriptions > 0 %}
                             volzet
                         {% endif %}
                     </p>
@@ -53,11 +53,11 @@
                         <div class="alert alert-danger">
                             <strong>Oeps!</strong> Het ziet er naar uit dat de inschrijvingen voor dit evenement gesloten zijn.
                         </div>
-                    {% elseif kalenderItem.maxSubscriptionsReached %}
+                    {% elseif kalenderItem.maxSubscriptionsReached and kalenderItem.maxSubscriptions > 0 %}
                         <div class="alert alert-danger">
                             <strong>Oeps!</strong> Het ziet er naar uit dat de inschrijvingen voor dit evenement vol zitten.
                         </div>
-                    {% else %}
+                    {% elseif kalenderItem.maxSubscriptions > 0 %}
                         <a class="btn btn-info" href="{{ path('subUser', {'calId': kalenderItem.id, 'userId': app.user.id }) }}">
                             <i class="fas fa-pen"></i>&nbsp;&nbsp;
                             Inschrijven
@@ -78,7 +78,7 @@
         </div>
         <div>
             {% if app.user %}
-                {% if not(subscribed is empty) %}
+                {% if not(subscribed is empty) and kalenderItem.maxSubscriptions > 0 %}
                     <h1 class="text-center m-5">
                         Inschrijvingen
                     </h1>
@@ -112,14 +112,18 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                {% else %}
+                {% elseif kalenderItem.maxSubscriptions > 0  %}
                     <div class="d-flex justify-content-center w-100">
                         <h5>Er zijn nog geen inschrijvingen.</h5>
+                    </div>
+                {% else %}
+                    <div class="d-flex justify-content-center w-100">
+                        <h5>Dit evenement laat geen inschrijvingen toe.</h5>
                     </div>
                 {% endif %}
 
 
-                {% if not(awaiting is empty) %}
+                {% if not(awaiting is empty) and kalenderItem.maxSubscriptions > 0 %}
 
                     <h1 class="text-center m-5">
                         Wachtlijst
@@ -155,11 +159,12 @@
                         </tbody>
                     </table>
 
-                {% else %}
+                {% elseif kalenderItem.maxSubscriptions > 0  %}
                     <div class="d-flex justify-content-center w-100">
                         <h5>De wachtlijst is leeg.</h5>
                     </div>
                 {% endif %}
+
             {% endif %}
         </div>
     {% endif %}

@@ -78,6 +78,16 @@ class CalenderController extends AbstractController {
             $item->setAuthor($user->getUsername());
             $item->setSubmitDate(new \DateTime());
 
+            if($item->getMaxSubscriptions() == null) {
+                $item->setMaxSubscriptions(0);
+            }
+            if($item->getDescription() == null) {
+                $item->setDescription("");
+            }
+            if($item->getDetails() == null) {
+                $item->setDetails("");
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($item);
             $entityManager->flush();
@@ -109,6 +119,16 @@ class CalenderController extends AbstractController {
             $item = $form->getData();
             $item->setAuthor($user->getUsername());
             $item->setSubmitDate(new \DateTime());
+
+            if($item->getMaxSubscriptions() == null) {
+                $item->setMaxSubscriptions(0);
+            }
+            if($item->getDescription() == null) {
+                $item->setDescription("");
+            }
+            if($item->getDetails() == null) {
+                $item->setDetails("");
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
@@ -177,27 +197,27 @@ class CalenderController extends AbstractController {
             ->add('title', TextType::class,
                 array('attr' => array('class' => 'form-control'), 'label' => 'Titel'))
             ->add('description', TextareaType::class, array(
-                'required' => true,
+                'required' => false,
                 'attr' => array('class' => 'form-control', 'rows' => '4'), 'label' => 'Korte uitleg'))
 
             ->add('details', CKEditorType::class, array(
                 'config' =>[
                     'uiColor' => '#e2e2e2',
                     'toolbar' => 'basic',
-                    'required' => true
+                    'required' => false
                 ],
-                'required' => true,
+                'required' => false,
                 'label' => 'Details',
                 'attr' => array('class' => 'form-control', 'rows' => '10')))
             ->add('startDate', DateTimeType::class, array(
                 'widget' => 'single_text',
                 'attr' => array('class' => 'form-control'),
-                'label' =>"Begin datum"
+                'label' =>"Begindatum"
             ))
             ->add('endDate', DateTimeType::class, array(
                 'widget' => 'single_text',
                 'attr' => array('class' => 'form-control'),
-                'label' =>"Eind datum"
+                'label' =>"Einddatum"
             ))
             ->add('subscriptionEndDate', DateTimeType::class, array(
                 'widget' => 'single_text',
@@ -206,6 +226,7 @@ class CalenderController extends AbstractController {
             ))
             ->add('CalenderType', ChoiceType::class, [
                 'attr' => array('class' => 'form-control'),
+                'label' => 'Kalender type',
                 'choices'  => [
                     'Duiken' => 0,
                     'Lessen/trainingen' => 1,
@@ -213,7 +234,10 @@ class CalenderController extends AbstractController {
                 ],
             ])
             ->add('maxSubscriptions', IntegerType::class,
-                array('attr' => array('class' => 'form-control'), 'label' => 'Maximum aantal inschrijvingen'))
+                array(
+                    'required' => false,
+                    'attr' => array('class' => 'form-control'), 'label' => 'Maximum aantal inschrijvingen')
+                )
             ->add('save', SubmitType::class, array(
                 'label' => $buttonName,
                 'attr' => array('class' => 'btn btn-primary mt-3')
