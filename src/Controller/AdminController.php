@@ -18,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -53,6 +54,16 @@ class AdminController extends AbstractController
             10
         );
         return $this->render('AdminSpecificPages/users.html.twig', array('users' => $results));
+    }
+
+    /**
+     * @Route("/users/info", name="getUsersInfo")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function getUsersInfo(Request $request){
+        $this->getGlobalVars();
+        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+        return $this->render('AdminSpecificPages/usersInfo.html.twig', array('users' => $users));
     }
 
     /**
@@ -288,6 +299,8 @@ class AdminController extends AbstractController
                 array('attr' => array('class' => 'form-control'), 'label' => 'email'))
             ->add('phoneNumber', TelType::class,
                 array('attr' => array('class' => 'form-control'), 'label' => 'telefoon nummer'))
+            ->add('address', TextareaType::class,
+                array('attr' => array('class' => 'form-control', 'placeholder' => 'Straat 11, 3500 Stad'), 'label' => 'Adres'))
             ->add('UserRole', ChoiceType::class, [
                 'mapped' => false,
                 'label' => 'Welke rol krijgt deze user',
@@ -327,6 +340,8 @@ class AdminController extends AbstractController
                 array('attr' => array('class' => 'form-control'), 'label' => 'email'))
             ->add('phoneNumber', TelType::class,
                 array('attr' => array('class' => 'form-control'), 'label' => 'telefoonnummer'))
+            ->add('address', TextareaType::class,
+                array('attr' => array('class' => 'form-control', 'placeholder' => 'Straat 11, 3500 Stad'), 'label' => 'Adres'))
             ->add('UserRole', ChoiceType::class, [
                 'mapped' => false,
                 'label' => 'Welke rol krijgt deze user',

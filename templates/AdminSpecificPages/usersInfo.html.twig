@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if users %}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Bestuurslid</th>
+                <th scope="col">Naam</th>
+                <th scope="col">Email</th>
+                <th scope="col">Telefoonnummer</th>
+                <th scope="col">Adres</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    {% if user.isBestuursLid %}
+                        <td><i class="fas fa-check-circle" style="color: #02b875"></i></td>
+                    {% else %}
+                        <td><i class="fas fa-times-circle" style="color: #d9534f"></i></td>
+                    {% endif %}
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phoneNumber }}</td>
+                    <td>{{ user.address }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

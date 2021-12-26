@@ -46,6 +46,11 @@ class User implements UserInterface, \Serializable
     private $phoneNumber;
 
     /**
+     * @ORM\Column(type="string", length=500, nullable=true)
+     */
+    private $address;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $description;
@@ -121,6 +126,24 @@ class User implements UserInterface, \Serializable
     {
         $this->phoneNumber = $phoneNumber;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * @param mixed $address
+     */
+    public function setAddress($address): void
+    {
+        $this->address = $address;
+    }
+
+
 
     /**
      * @return mixed
