@@ -4,11 +4,12 @@ namespace App\Controller;
 
 use App\Entity\CalenderItem;
 use App\Entity\Page;
-use App\Entity\User;
+use DateTime;
 use App\Services\AddGlobalsService;
 use App\Services\CalenderTypes;
 use App\Services\publishedPageFilter;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,8 +34,10 @@ class CalenderController extends AbstractController {
     public function kalender(Request $request, PaginatorInterface $paginator)
     {
         $this->getGlobalVars();
-        $calenderItems = $this->getDoctrine()->getRepository(CalenderItem::class)->findBy([], ['startDate'=>'DESC']);
-
+        $calenderItems = $this->getDoctrine()->getRepository(CalenderItem::class)->findBy([], ['startDate'=>'ASC']);
+        $calenderItems = array_filter($calenderItems, function(CalenderItem $item) {
+            return !(new DateTime() >= $item->getStartDate());
+        });
         $results = $paginator->paginate(
             $calenderItems,
             $request->query->getInt('page', 1),
@@ -49,7 +52,10 @@ class CalenderController extends AbstractController {
     public function easyKalender(Request $request, PaginatorInterface $paginator)
     {
         $this->getGlobalVars();
-        $calenderItems = $this->getDoctrine()->getRepository(CalenderItem::class)->findBy([], ['startDate'=>'DESC']);
+        $calenderItems = $this->getDoctrine()->getRepository(CalenderItem::class)->findBy([], ['startDate'=>'ASC']);
+        $calenderItems = array_filter($calenderItems, function(CalenderItem $item) {
+            return !(new DateTime() >= $item->getStartDate());
+        });
 
         $results = $paginator->paginate(
             $calenderItems,
