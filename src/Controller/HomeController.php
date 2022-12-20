@@ -14,6 +14,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -56,6 +59,32 @@ class HomeController extends AbstractController {
             $entityManager->persist($submission);
             $entityManager->flush();
 
+            $uname = $submission->getUsername();
+            $mail = $submission->getEmail();
+            $phone = $submission->getPhoneNumber();
+            $shoe = $submission->getShoeSize();
+            $exp = $submission->getExperience();
+
+            //send submission via mail
+            $html = <<<HTMLBody
+                        <h1>Nieuwe Inschrijving</h1>
+                        <p>Naam: $uname</p>
+                        <p>Email: <a href="mailto:$mail">$mail</a></p>
+                        <p>Telefoonnummer: <a href="tel:$phone">$phone</a></p>
+                        <p>Schoenmaat: $shoe</p>
+                        <p>Ervaring: $exp</p>
+                    HTMLBody;
+            $dsn = 'gmail+smtp://bbcasperj@gmail.com:uzpcziaveczfohwb@default';
+            $transport = Transport::fromDsn($dsn);
+            $email = (new Email())
+                ->from('bbcasperj@gmail.com')
+                ->to('casper.jacobs.cj@gmail.com')
+                ->subject('Nieuwe inschrijving.')
+                ->html($html);
+
+            $mailer = new Mailer($transport);
+            $mailer->send($email);
+
             return $this->render('defaultPages/leerDuiken.html.twig', array(
                 'submitted' => true,
                 'header' => 'Schrijf je nu in',
@@ -97,4 +126,6 @@ class HomeController extends AbstractController {
     private function getHomePageEnabledPages(){
         return publishedPageFilter::filterHomePageEnabled($this->getDoctrine()->getRepository(Page::class)->findAll());
     }
+
+    
 }
