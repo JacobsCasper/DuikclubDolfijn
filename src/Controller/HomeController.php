@@ -74,7 +74,7 @@ class HomeController extends AbstractController {
                         <p>Schoenmaat: $shoe</p>
                         <p>Ervaring: $exp</p>
                     HTMLBody;
-            $dsn = 'gmail+smtp://bbcasperj@gmail.com:itbnoktsoitvbyxr@default';
+            $dsn = 'gmail+smtp://bbcasperj@gmail.com:itbnoktsoitvbyxr@default?verify_peer=0';
             $transport = Transport::fromDsn($dsn);
             $email = (new Email())
                 ->from('bbcasperj@gmail.com')
